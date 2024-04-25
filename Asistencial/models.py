@@ -92,6 +92,10 @@ class paciente(models.Model):
     cordePac = gis_models.PointField("Location in Map", geography=True, blank=True, null=True,srid=4326, help_text="Point(longitude latitude)")
     direccion = models.CharField(max_length=200, null=True, blank=True)
     distrito = models.CharField(max_length=100, null=True, blank=True)
+    telefono = models.CharField(max_length=100, null=True, blank=True)
+    telefonoAlterno = models.CharField(max_length=100, null=True, blank=True)
+    referencia=models.CharField(max_length=100, null=True, blank=True)
+    ubigeo_id  = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.nombres
@@ -504,6 +508,8 @@ class asigCuposPac(models.Model):
     fechaTerminoCupo = models.DateField(null=True, blank=True)
     usuario_reg_termino = models.CharField(max_length=150, null=True, blank=True)
     estado = models.BooleanField()
+    sustento = models.FileField(upload_to='archivos_pdf/')
+    motivo_liberacion = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.parameCentroPuesto.cas.descripCas+"/"+self.parameCentroPuesto.turno+"/"+self.parameCentroPuesto.frecuencia+"/"+self.paciente.nombres
@@ -738,12 +744,12 @@ class formularioCambioClinica(models.Model):
     id_cas_1 = models.ForeignKey(cas, on_delete=models.PROTECT, db_column='id_cas_1',related_name='id_cas_1')
     id_cas_2 = models.ForeignKey(cas, on_delete=models.PROTECT, db_column='id_cas_2',related_name='id_cas_2', blank=True, null=True)
     es_titular = models.BooleanField()
-    num_doc = models.CharField(max_length=100)
+    num_doc = models.CharField(max_length=100, blank=True, null=True)
     parentesco = models.CharField(max_length=100, blank=True, null=True)
-    telefono = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=100, blank=True)
     id_cambio_clinica = models.AutoField(primary_key=True)
-    nombre_parentesco=models.CharField(max_length=100)
-    correo=models.CharField(max_length=100)
+    nombre_parentesco=models.CharField(max_length=100, blank=True, null=True)
+    correo=models.CharField(max_length=100, blank=True, null=True)
     tratamiento_datos=models.BooleanField()
 
     class Meta:

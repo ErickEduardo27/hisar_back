@@ -176,7 +176,6 @@ class asigCuposPacAdmin(admin.ModelAdmin):
     list_display = ('parameCentroPuesto','paciente','fechaAsigCupo','fecha_reg','usuario_reg','fechaTerminoCupo','usuario_reg_termino','estado')
     autocomplete_fields = ('paciente',)
     search_fields = ('usuario_reg',)
-    
 
 class asisPacDiarioAdmin(admin.ModelAdmin):
     list_display = ('asigCuposPac','estadoAsistencia','observaFalta','usuario_reg','fecha_reg','validacionAsistencia','casAsd','vigSeguro','estadoAcredi')

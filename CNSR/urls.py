@@ -37,6 +37,7 @@ router.register(r'examen', viewsAsis.ExamenViewSet)
 router.register(r'archivo', viewsAsis.ArchivoViewSet)
 router.register(r'proveedores', viewsAsis.proveedorViewSet)
 router.register(r'provMaq', viewsAsis.provMaqViewSet)
+
 router.register(r'personal', viewsAsis.personalViewSet)
 router.register(r'dependencia', viewsAsis.dependenciaViewSet)
 router.register(r'ambiente', viewsAsis.ambienteViewSet)
@@ -67,6 +68,7 @@ router.register(r'docuContratados', viewsAsis.docuContratadosViewSet)
 router.register(r'parameCentro', viewsAsis.parameCentroViewSet)
 router.register(r'parameCentroPuesto', viewsAsis.parameCentroPuestoViewSet)
 router.register(r'asigCuposPac', viewsAsis.asigCuposPacViewSet)
+router.register(r'asigCuposPacIndex', viewsAsis.asigCuposPacIndexViewSet, basename='asigCuposPacIndex')
 router.register(r'asisPacDiario', viewsAsis.asisPacDiarioViewSet)
 router.register(r'asisPacDiarioAdicional', viewsAsis.asisPacDiarioAdicionalViewSet)
 router.register(r'ubigeo', viewsAsis.ubigeoViewSet)
@@ -100,8 +102,18 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('enviar-correo-adj/', viewsAsis.enviar_correo_con_adjunto, name='enviar_correo_adj'),
 
-    path('repCuposDisponibles/', viewsAsis.rep_Cupos_Disponibles, name='rep_Cupos_Disponibles'),
+    
     path('repAsistenciaPacientes/', viewsAsis.rep_Asistencia_Pacientes, name='rep_Asistencia_Pacientes'),
     path('repInformeNutricion/', viewsAsis.rep_Informe_Nutricion, name='rep_Informe_Nutricion'),
     path('repInformeNutricionAdmin/', viewsAsis.rep_Informe_Nutricion_Admin, name='rep_Informe_Nutricion_Admin'),
+    path('rep_cupos/', viewsAsis.rep_cupos, name='rep_cupos'),
+    path('rep_cupos_agrupados/', viewsAsis.rep_cupos_agrupados, name='rep_cupos_agrupados'),
+    path('generar_lista_disponible/', viewsAsis.generar_lista_disponible, name='generar_lista_disponible'),
+    path('carga_masiva_paciente/', viewsAsis.carga_masiva_paciente, name='carga_masiva_paciente'),
+    path('generar_confirmacion_liberacion_cupo/', viewsAsis.generar_confirmacion_liberacion_cupo, name='generar_confirmacion_liberacion_cupo'),
+    path('generar_reporte_inasistencia/', viewsAsis.generar_reporte_inasistencia, name='generar_reporte_inasistencia'),
+    path('generar_turno_actual/', viewsAsis.generar_turno_actual, name='generar_turno_actual'),
+    path('generar_actualizar_turno/', viewsAsis.generar_actualizar_turno, name='generar_actualizar_turno'),
+    path('generar_lista_pacientes/', viewsAsis.generar_lista_pacientes, name='generar_lista_pacientes')
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
