@@ -315,12 +315,61 @@ def generar_turno_actual(request):
 
             # Obtener todos los resultados
             resultados = cursor.fetchall()
-
+            print(resultados)
             # Convertir los resultados a formato JSON
             datos = []
 
             for fila in resultados:
                 datos.append(dict(zip(('frecuencia','turno','numeroPuesto','tipoPuesto','asigCupoId'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_liberacion_cupo(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+            
+            # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
+            asigcupospac_id = objeto_python.get("asigcupospac_id")
+            usuario = objeto_python.get("usuario")
+            motivo = objeto_python.get("motivo")
+
+            # Verificar si los valores son None o no están presentes
+            
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_liberacion_cupo(%s,%s,%s)'
+            cursor.execute(sql, [asigcupospac_id,usuario,motivo])
+            
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            print(resultados)
+            # Convertir los resultados a formato JSON
+            datos = []
+            
+            for fila in resultados:
+                datos.append(dict(zip(('nombres'), fila)))
 
             # Convertir la lista de diccionarios a formato JSON
             json_data = json.dumps(datos)

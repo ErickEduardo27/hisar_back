@@ -114,6 +114,8 @@ urlpatterns = [
     path('generar_reporte_inasistencia/', viewsAsis.generar_reporte_inasistencia, name='generar_reporte_inasistencia'),
     path('generar_turno_actual/', viewsAsis.generar_turno_actual, name='generar_turno_actual'),
     path('generar_actualizar_turno/', viewsAsis.generar_actualizar_turno, name='generar_actualizar_turno'),
-    path('generar_lista_pacientes/', viewsAsis.generar_lista_pacientes, name='generar_lista_pacientes')
+    path('generar_lista_pacientes/', viewsAsis.generar_lista_pacientes, name='generar_lista_pacientes'),
+    path('generar_liberacion_cupo/', viewsAsis.generar_liberacion_cupo, name='generar_liberacion_cupo')
+    
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

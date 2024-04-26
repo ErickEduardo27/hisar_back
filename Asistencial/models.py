@@ -508,7 +508,7 @@ class asigCuposPac(models.Model):
     fechaTerminoCupo = models.DateField(null=True, blank=True)
     usuario_reg_termino = models.CharField(max_length=150, null=True, blank=True)
     estado = models.BooleanField()
-    sustento = models.FileField(upload_to='archivos_pdf/')
+    sustento = models.FileField(upload_to='archivos_pdf/', null=True)
     motivo_liberacion = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
