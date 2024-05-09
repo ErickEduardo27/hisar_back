@@ -73,7 +73,6 @@ router.register(r'asisPacDiario', viewsAsis.asisPacDiarioViewSet)
 router.register(r'asisPacDiarioAdicional', viewsAsis.asisPacDiarioAdicionalViewSet)
 router.register(r'ubigeo', viewsAsis.ubigeoViewSet)
 router.register(r'pacienteGeoTem', viewsAsis.pacienteGeoTemViewSet)
-
 #Servicios APP Movil Hisar
 router.register(r'loginAppHisar', viewsAsis.loginAppHisarViewSet)
 router.register(r'dpDiario', viewsAsis.dpDiarioViewSet)
@@ -97,12 +96,9 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
-
     path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('enviar-correo-adj/', viewsAsis.enviar_correo_con_adjunto, name='enviar_correo_adj'),
-
-    
     path('repAsistenciaPacientes/', viewsAsis.rep_Asistencia_Pacientes, name='rep_Asistencia_Pacientes'),
     path('repInformeNutricion/', viewsAsis.rep_Informe_Nutricion, name='rep_Informe_Nutricion'),
     path('repInformeNutricionAdmin/', viewsAsis.rep_Informe_Nutricion_Admin, name='rep_Informe_Nutricion_Admin'),
@@ -115,7 +111,8 @@ urlpatterns = [
     path('generar_turno_actual/', viewsAsis.generar_turno_actual, name='generar_turno_actual'),
     path('generar_actualizar_turno/', viewsAsis.generar_actualizar_turno, name='generar_actualizar_turno'),
     path('generar_lista_pacientes/', viewsAsis.generar_lista_pacientes, name='generar_lista_pacientes'),
-    path('generar_liberacion_cupo/', viewsAsis.generar_liberacion_cupo, name='generar_liberacion_cupo')
+    path('generar_liberacion_cupo/', viewsAsis.generar_liberacion_cupo, name='generar_liberacion_cupo'),
+    path('generar_lista_pacientes_nuevos/', viewsAsis.generar_lista_pacientes_nuevos, name='generar_lista_pacientes_nuevos')
     
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

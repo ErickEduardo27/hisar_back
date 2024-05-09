@@ -746,7 +746,7 @@ class formularioCambioClinica(models.Model):
     es_titular = models.BooleanField()
     num_doc = models.CharField(max_length=100, blank=True, null=True)
     parentesco = models.CharField(max_length=100, blank=True, null=True)
-    telefono = models.CharField(max_length=100, blank=True)
+    telefono = models.CharField(max_length=100, blank=True, null=True)
     id_cambio_clinica = models.AutoField(primary_key=True)
     nombre_parentesco=models.CharField(max_length=100, blank=True, null=True)
     correo=models.CharField(max_length=100, blank=True, null=True)
