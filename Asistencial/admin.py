@@ -31,7 +31,7 @@ class maestroAdmin(admin.ModelAdmin):
     search_fields = ('codMaestro',)
 
 class pacienteAdmin(admin.ModelAdmin):
-    list_display = ('tipo_doc','num_doc','ape_pat','ape_mat','nombres','fecha_nac','sexo','cas','estado','direccion','distrito')
+    list_display = ('tipo_doc','num_doc','ape_pat','ape_mat','nombres','fecha_nac','sexo','hospital_id','medico_id','fecha_ultima_dialisis','estado','direccion','distrito')
     ordering = ['ape_pat',]
     search_fields = ('ape_pat','num_doc')
 

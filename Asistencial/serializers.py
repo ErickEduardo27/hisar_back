@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica
+from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica,hospital,medico
 from rest_framework import serializers
 
 from datetime import datetime
@@ -52,6 +52,7 @@ class PacienteSerializer(serializers.HyperlinkedModelSerializer):
     datosCasOri = casSerializer(source = "cas", read_only=True)
     edad = serializers.SerializerMethodField('obtain_edad') 
     nombre_completo = serializers.SerializerMethodField()
+    datosUbigeo = ubigeoSerializer(source = "ubigeo_id", read_only=True)
 
     def obtain_edad(self, mascota):
         age = relativedelta(datetime.now(), mascota.fecha_nac)
@@ -356,10 +357,20 @@ class incidenciaEnfermeriaDetalleSerializer(serializers.HyperlinkedModelSerializ
         fields = '__all__'
 
 class formularioCambioClinicaSerializer (serializers.HyperlinkedModelSerializer):
-    datosPaciente = PacienteSerializer(source="paciente", read_only=True)
-    datosCas1 = casSerializer(source="descripCas", read_only=True)
-    datosCas2 = casSerializer(source="descripCas", read_only=True)
+    datosPaciente = PacienteSerializer(source="paciente_id", read_only=True)
+    datosCas1 = casSerializer(source="id_cas_1", read_only=True)
+    datosCas2 = casSerializer(source="id_cas_2", read_only=True)
 
     class Meta:
         model = formularioCambioClinica
         fields = '__all__'
+
+class hospitalSerializer (serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = hospital
+        fields = '__all__'
+
+class medicoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = medico
+        fields = '__all__' 

@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from Asistencial.models import incidenciaEnfermeriaDetalle,procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,listaEspera,parNuticion,maestroMatSap,delegacionBienesEstra, cas, usuario,perfil, paciente, examen, archivo, bienAmbiente, bienImag, presAnemia,admiAnemia, exclusionAnemia, movimientoAnemia, bienPersonal, bienpat, dependencia, ambiente, personal, proveedor, provMaq, incidenciaDsi, maestro, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub,formularioCambioClinica
-from Asistencial.serializers import incidenciaEnfermeriaDetalleSerializer,procedimientoEnfermeriaSerializer,incidenciaEnfermeriaCabeceraSerializer,programacionTurnoSerializer,unidadAtencionSerializer,correosSerializer,solicitudSerializer,movimientoPacienteSerializer,pacienteLocalizacionSerializer,pacienteGeoTemSerializer,ubigeoSerializer,asisPacDiarioAdicionalSerializer,examenLaboratorioSerializer,dpDiarioSerializer,loginAppHisarSerializer,serologiaPacienteSerializer,baseDatosProduccionSerializer,asisPacDiarioSerializer,asigCuposPacSerializer,parameCentroPuestoSerializer,parameCentroSerializer,docuContratadosSerializer,listaEsperaSerializer,parNuticionSerializer,maestroMatSapSerializer,delegacionBienesEstraSerializer, casSerializer ,usuarioSerializer,perfilSerializer, PacienteSerializer, ExamenSerializer, ArchivoSerializer, presAnemiaSerializer, admiAnemiaSerializer, exclusionAnemiaSerializer, movimientoAnemiaSerializer, bienAmbienteSerializer, bienImagSerializer, bienPersonalSerializer, bienpatSerializer, dependenciaSerializer, ambienteSerializer, personalSerializer, proveedorSerializer, provMaqSerializer, incidenciaDsiSerializer, maestroSerializer, bienHadwareSerializer, bienSoftwareSerializer, bienDetalleMonitorSerializer, nutricionSerializer, personalVpnSerializer, personalCertificadoSerializer, valGlobalSubSerializer,formularioCambioClinicaSerializer
+from django.shortcuts import get_object_or_404
+from Asistencial.models import incidenciaEnfermeriaDetalle,procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,listaEspera,parNuticion,maestroMatSap,delegacionBienesEstra, cas, usuario,perfil, paciente, examen, archivo, bienAmbiente, bienImag, presAnemia,admiAnemia, exclusionAnemia, movimientoAnemia, bienPersonal, bienpat, dependencia, ambiente, personal, proveedor, provMaq, incidenciaDsi, maestro, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub,formularioCambioClinica,hospital,medico
+from Asistencial.serializers import incidenciaEnfermeriaDetalleSerializer,procedimientoEnfermeriaSerializer,incidenciaEnfermeriaCabeceraSerializer,programacionTurnoSerializer,unidadAtencionSerializer,correosSerializer,solicitudSerializer,movimientoPacienteSerializer,pacienteLocalizacionSerializer,pacienteGeoTemSerializer,ubigeoSerializer,asisPacDiarioAdicionalSerializer,examenLaboratorioSerializer,dpDiarioSerializer,loginAppHisarSerializer,serologiaPacienteSerializer,baseDatosProduccionSerializer,asisPacDiarioSerializer,asigCuposPacSerializer,parameCentroPuestoSerializer,parameCentroSerializer,docuContratadosSerializer,listaEsperaSerializer,parNuticionSerializer,maestroMatSapSerializer,delegacionBienesEstraSerializer, casSerializer ,usuarioSerializer,perfilSerializer, PacienteSerializer, ExamenSerializer, ArchivoSerializer, presAnemiaSerializer, admiAnemiaSerializer, exclusionAnemiaSerializer, movimientoAnemiaSerializer, bienAmbienteSerializer, bienImagSerializer, bienPersonalSerializer, bienpatSerializer, dependenciaSerializer, ambienteSerializer, personalSerializer, proveedorSerializer, provMaqSerializer, incidenciaDsiSerializer, maestroSerializer, bienHadwareSerializer, bienSoftwareSerializer, bienDetalleMonitorSerializer, nutricionSerializer, personalVpnSerializer, personalCertificadoSerializer, valGlobalSubSerializer,formularioCambioClinicaSerializer,hospitalSerializer,medicoSerializer
 from rest_framework import permissions, viewsets, filters
+
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 #servicios externos
@@ -26,7 +28,7 @@ import json
 def rep_Informe_Nutricion_Admin(request):
     body=request.body.decode('utf-8')
     objeto_python = json.loads(body)
-     #Calculamos la fecha de hoy
+    #Calculamos la fecha de hoy
     hoy = date.today()
     fecha_formateada = hoy.strftime("%m-%d-%Y")
     if objeto_python["fecha"]==None :
@@ -54,7 +56,7 @@ def rep_Informe_Nutricion_Admin(request):
 def rep_Informe_Nutricion(request):
     body=request.body.decode('utf-8')
     objeto_python = json.loads(body)
-     #Calculamos la fecha de hoy
+    #Calculamos la fecha de hoy
     hoy = date.today()
     fecha_formateada = hoy.strftime("%m-%d-%Y")
     if objeto_python["fecha"]==None :
@@ -167,16 +169,15 @@ def rep_cupos_agrupados(request):
             
             # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
             clinica_id = objeto_python.get("clinica_id")
-            estado = objeto_python.get("estado")
+            tipo_puesto = objeto_python.get("tipo_puesto")
             # Verificar si los valores son None o no están presentes
             
-
             # Importar las clases necesarias
             cursor = connection.cursor()
             
             # Definir la consulta SQL y ejecutarla
             sql = 'select * from generar_reporte_cupos(%s, %s)'
-            cursor.execute(sql, [clinica_id, estado])
+            cursor.execute(sql, [clinica_id, tipo_puesto])
 
             # Obtener todos los resultados
             resultados = cursor.fetchall()
@@ -259,6 +260,7 @@ def generar_reporte_inasistencia(request):
             
             # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
             cas_id = objeto_python.get("cas_id")
+            dias = objeto_python.get("dias")
             # Verificar si los valores son None o no están presentes
             
 
@@ -266,8 +268,8 @@ def generar_reporte_inasistencia(request):
             cursor = connection.cursor()
             
             # Definir la consulta SQL y ejecutarla
-            sql = 'select * from generar_reporte_inasistencia(%s)'
-            cursor.execute(sql, [cas_id])
+            sql = 'select * from generar_reporte_inasistencia(%s,%s)'
+            cursor.execute(sql, [cas_id,dias])
 
             # Obtener todos los resultados
             resultados = cursor.fetchall()
@@ -304,8 +306,6 @@ def generar_turno_actual(request):
             
             # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
             paciente_id = objeto_python.get("paciente_id")
-            # Verificar si los valores son None o no están presentes
-            
 
             # Importar las clases necesarias
             cursor = connection.cursor()
@@ -316,12 +316,12 @@ def generar_turno_actual(request):
 
             # Obtener todos los resultados
             resultados = cursor.fetchall()
-            print(resultados)
+            
             # Convertir los resultados a formato JSON
             datos = []
 
             for fila in resultados:
-                datos.append(dict(zip(('frecuencia','turno','numeroPuesto','tipoPuesto','asigCupoId'), fila)))
+                datos.append(dict(zip(('frecuencia','turno','numeroPuesto','tipoPuesto','asigCupoId','casId'), fila)))
 
             # Convertir la lista de diccionarios a formato JSON
             json_data = json.dumps(datos)
@@ -387,9 +387,142 @@ def generar_liberacion_cupo(request):
 
     return JsonResponse({"error": "Solicitud no permitida."}, status=405)
 
+def generar_asignacion_cupo(request):
+    if request.method == 'POST':
+        try:
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Obtener los valores del formulario
+            fecha_reg = objeto_python.get("fecha_reg")
+            usuario_reg= objeto_python.get("usuario_reg")
+            paciente = objeto_python.get("paciente")
+            parameCentroPuesto = objeto_python.get("parameCentroPuesto")
+            estado = objeto_python.get("estado")
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_asignacion_cupo(%s,%s,%s,%s)'
+            cursor.execute(sql, [fecha_reg,usuario_reg,paciente,parameCentroPuesto])
+            
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            print(resultados)
+            # Convertir los resultados a formato JSON
+            datos = []
+            
+            for fila in resultados:
+                datos.append(dict(zip(('nombres'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+
+def generar_resolucion_formulario(request):
+    if request.method == 'POST':
+        try:
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Obtener los valores del formulario
+            id_formulario = objeto_python.get("id_formulario")
+            respuesta= objeto_python.get("respuesta")
+            usuario = objeto_python.get("usuario")
+            fecha = objeto_python.get("fecha")
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_resolucion_formulario(%s,%s,%s,%s)'
+            cursor.execute(sql, [id_formulario,respuesta,usuario,fecha])
+            
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            print(resultados)
+            # Convertir los resultados a formato JSON
+            datos = []
+            
+            for fila in resultados:
+                datos.append(dict(zip(('nombres'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+
 @api_view(['POST'])
 @permission_required([IsAuthenticated])
-def generar_actualizar_turno(request):
+def generar_liberacion_cupo_documento(request):
+    if request.method == 'POST':
+        try:
+            # Obtener los valores del formulario
+            asigcupospac_id = request.POST.get("asigcupospac_id")
+            motivo_liberacion = request.POST.get("motivo_liberacion")
+            usuario_reg_termino = request.POST.get("usuario_reg_termino")
+            sustento = request.FILES.get("sustento")
+            # Obtener la instancia del modelo y actualizar
+            asigCuposPacItem = get_object_or_404(asigCuposPac, id=asigcupospac_id)
+            asigCuposPacItem.sustento = sustento
+            asigCuposPacItem.save()
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_liberacion_cupo(%s,%s,%s)'
+            cursor.execute(sql, [asigcupospac_id,usuario_reg_termino,motivo_liberacion])
+            
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            print(resultados)
+            # Convertir los resultados a formato JSON
+            datos = []
+            
+            for fila in resultados:
+                datos.append(dict(zip(('nombres'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+
+def generar_buscar_cupo(request):
     if request.method == 'POST':
         try:
             # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
@@ -397,8 +530,7 @@ def generar_actualizar_turno(request):
             objeto_python = json.loads(body)
             
             # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
-            id_parameCentroPuesto = objeto_python.get("id_parameCentroPuesto")
-            id_asignacioncupo = objeto_python.get("id_asignacioncupo")
+            paciente_id = objeto_python.get("paciente_id")
             # Verificar si los valores son None o no están presentes
             
 
@@ -406,8 +538,58 @@ def generar_actualizar_turno(request):
             cursor = connection.cursor()
             
             # Definir la consulta SQL y ejecutarla
-            sql = 'select * from generar_actualizar_turno(%s,%s)'
-            cursor.execute(sql, [id_parameCentroPuesto,id_asignacioncupo])
+            sql = 'select * from generar_buscar_cupo(%s)'
+            cursor.execute(sql, [paciente_id])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('frecuencia'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_movimiento_paciente(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+            
+            # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
+            id_asignacioncupo = objeto_python.get("id_asignacioncupo")
+            tipo_movimiento=objeto_python.get("tipo_movimiento")
+            id_parameCentroPuesto = objeto_python.get("id_parameCentroPuesto")
+            usuario = objeto_python.get("usuario")
+            fecha = objeto_python.get("fecha")
+            cas = objeto_python.get("cas")
+            # Verificar si los valores son None o no están presentes
+            
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_movimiento_paciente(%s,%s,%s,%s,%s)'
+            cursor.execute(sql, [id_asignacioncupo,tipo_movimiento,id_parameCentroPuesto,usuario,fecha])
 
             # Obtener todos los resultados
             resultados = cursor.fetchall()
@@ -479,6 +661,92 @@ def generar_lista_disponible(request):
 
 @api_view(['POST'])
 @permission_required([IsAuthenticated])
+def generar_lista_hospital(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+            
+            # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
+            # Verificar si los valores son None o no están presentes
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_hospital()'
+            cursor.execute(sql, [])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('idHospital','hospital','ruc','tipo_institucion','direccion','inicio_actividades','estado'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_medico(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+            
+            # Obtener los valores de la solicitud y asegurarse de que sean del tipo esperado
+            # Verificar si los valores son None o no están presentes
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_medico()'
+            cursor.execute(sql, [])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('idMedico','nombre','dni','correo','telefono'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
 def generar_lista_pacientes(request):
     if request.method == 'POST':
         try:
@@ -525,16 +793,14 @@ def carga_masiva_paciente(request):
     if request.method == 'POST' and request.FILES['file']:
         file = request.FILES['file']
         try:
-            # Aquí procesas los datos del archivo Excel y los guardas en la base de datos
             # Por ejemplo, puedes iterar sobre las filas y guardar cada una como un registro en la base de datos
             workbook = openpyxl.load_workbook(file, read_only=True, data_only=True)
             sheet = workbook.active
             for row in sheet.iter_rows(min_row=2, values_only=True):
                 tipo_doc, num_doc, ape_pat, ape_mat, nombres, fecha_nac, sexo, cas_id ,cordePac,direccion,distrito = row
-
                 # Verificar si el paciente ya existe en la base de datos
                 paciente_existente = paciente.objects.filter(num_doc=num_doc).first()
-                srid = 4326 
+                srid = 4326
                 if paciente_existente:
                     # Actualizar los datos del paciente existente
                     paciente_existente.tipo_doc = maestro.objects.get(id=tipo_doc)
@@ -569,11 +835,57 @@ def carga_masiva_paciente(request):
                         distrito=distrito
                     )
                     paciente_nuevo.save()
+
             return JsonResponse({'message': 'Datos guardados exitosamente.'})
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Debes enviar un archivo.'}, status=400)
+
+
+def carga_masiva_lista_espera(request):
+    if request.method == 'POST' and request.FILES['file']:
+        file = request.FILES['file']
+        try:
+            # Aquí procesas los datos del archivo Excel y los guardas en la base de datos
+            # Por ejemplo, puedes iterar sobre las filas y guardar cada una como un registro en la base de datos
+            workbook = openpyxl.load_workbook(file, read_only=True, data_only=True)
+            sheet = workbook.active
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                fecha,num_docPaciente, id_cas_1,id_cas_2,es_titular,motivo,parentesco,num_docParentesco,nombreParentesco,telefonoParentesco,correoParentesco,tratamiento_datos = row
+
+                # Verificar si el paciente ya existe en la base de datos
+                paciente_existente = paciente.objects.filter(num_doc=num_docPaciente).first()
+                cas_instance_1 = cas.objects.filter(id=id_cas_1).first()
+                cas_instance_2 = cas.objects.filter(id=id_cas_2).first()
+                if paciente_existente:
+                    paciente_instance = paciente_existente
+                    es_titular_bool = es_titular.lower() == "true"
+                    tratamiento_datos_bool = tratamiento_datos.lower() == "true"
+                    # Actualizar los datos del paciente existente
+                    solicitud_nuevo = formularioCambioClinica(
+                        fecha=fecha,
+                        paciente_id=paciente_instance,
+                        id_cas_1=cas_instance_1,
+                        id_cas_2=cas_instance_2,
+                        es_titular=es_titular_bool,
+                        motivo=motivo,
+                        parentesco=parentesco,
+                        num_doc=num_docParentesco,
+                        nombre_parentesco=nombreParentesco,
+                        telefono=telefonoParentesco,
+                        correo=correoParentesco,
+                        tratamiento_datos=tratamiento_datos_bool,
+                        estado=False
+                    )
+                    solicitud_nuevo.save()
+
+            return JsonResponse({'message': 'Datos guardados exitosamente.'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Debes enviar un archivo.'}, status=400)
+
 
 @api_view(['POST'])
 @permission_required([IsAuthenticated])
@@ -604,6 +916,92 @@ def generar_lista_pacientes_nuevos(request):
 
             for fila in resultados:
                 datos.append(dict(zip(('paciente','id','num_doc'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_cupos(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Verificar si los valores son None o no están presentes
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_cupos()'
+            cursor.execute(sql)
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('frecuencia','turno','tipoPuesto','numeroPuesto','descripCas','estado','idCupo'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_actualizar_cupo(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Verificar si los valores son None o no están presentes
+            id_parameCentroPuesto = objeto_python.get("id_parameCentroPuesto")
+            estado = objeto_python.get("estado")
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_actualizar_cupo(%s,%s)'
+            cursor.execute(sql, [id_parameCentroPuesto,estado])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('frecuencia','turno','tipoPuesto'), fila)))
 
             # Convertir la lista de diccionarios a formato JSON
             json_data = json.dumps(datos)
@@ -1251,9 +1649,31 @@ class incidenciaEnfermeriaDetalleViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['=id',]
 
+
+
 class formularioCambioClinicaViewSet(viewsets.ModelViewSet):
     queryset = formularioCambioClinica.objects.all()
     serializer_class = formularioCambioClinicaSerializer
     permission_classes = [permissions.IsAuthenticated] 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['=id_cambio_clinica',]
+    search_fields = ['=estado']
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_param = self.request.query_params.get('search', None)
+        if search_param == "":
+            queryset = queryset.filter(estado__isnull=True)
+        return queryset
+
+class hospitalViewSet(viewsets.ModelViewSet):
+    queryset = hospital.objects.all()
+    serializer_class = hospitalSerializer
+    permission_classes = [permissions.IsAuthenticated] 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['=estado']
+    
+class medicoViewSet(viewsets.ModelViewSet):
+    queryset = medico.objects.all()
+    serializer_class = medicoSerializer
+    permission_classes = [permissions.IsAuthenticated] 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['=estado']

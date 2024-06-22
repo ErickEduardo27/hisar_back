@@ -77,6 +77,36 @@ class maestro(models.Model):
     def __str__(self):
         return (self.descripMaestro)
 
+class hospital(models.Model):
+    id = models.AutoField(primary_key=True)
+    hospital = models.CharField(max_length=100)
+    ruc = models.CharField(max_length=100)  # Asumiendo que Paciente es tu modelo de paciente
+    tipo_institucion = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=100)
+    inicio_actividades = models.CharField(max_length=100)
+    estado=models.BooleanField(blank=True, null=True)
+    
+
+    class Meta:
+        db_table = 'Asistencial_hospital'
+
+    def __str__(self):
+        return str(self.hospital)
+
+class medico(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+    dni = models.CharField(max_length=100)  # Asumiendo que Paciente es tu modelo de paciente
+    correo = models.CharField(max_length=100)
+    telefono = models.CharField(max_length=100)
+    
+
+    class Meta:
+        db_table = 'Asistencial_medico'
+
+    def __str__(self):
+        return str(self.nombre)
+
 class paciente(models.Model):
     tipo_doc = models.ForeignKey(maestro, on_delete=models.CASCADE)
     num_doc = models.CharField(max_length=15, unique=True)
@@ -85,7 +115,9 @@ class paciente(models.Model):
     nombres = models.CharField(max_length=50)
     fecha_nac = models.DateField(null=True, blank=True)
     sexo = models.CharField(max_length=10, null=True)
-    cas = models.ForeignKey(cas, on_delete=models.CASCADE)
+    hospital_id = models.ForeignKey(hospital, on_delete=models.PROTECT,db_column='hospital_id')
+    medico_id = models.ForeignKey(medico, on_delete=models.PROTECT,db_column='medico_id')
+    fecha_ultima_dialisis = models.CharField(max_length=20, null=True, blank=True)
     estado = models.CharField(max_length=5, default=1)
     latitud = models.CharField(max_length=100, null=True, blank=True)
     longitud = models.CharField(max_length=100, null=True, blank=True)
@@ -95,8 +127,7 @@ class paciente(models.Model):
     telefono = models.CharField(max_length=100, null=True, blank=True)
     telefonoAlterno = models.CharField(max_length=100, null=True, blank=True)
     referencia=models.CharField(max_length=100, null=True, blank=True)
-    ubigeo_id  = models.CharField(max_length=100, null=True, blank=True)
-
+    ubigeo_id  = models.ForeignKey(ubigeo, on_delete=models.PROTECT,db_column='ubigeo_id')
     def __str__(self):
         return self.nombres
 
@@ -510,6 +541,7 @@ class asigCuposPac(models.Model):
     estado = models.BooleanField()
     sustento = models.FileField(upload_to='archivos_pdf/', null=True)
     motivo_liberacion = models.CharField(max_length=200, null=True, blank=True)
+    tipo_paciente = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.parameCentroPuesto.cas.descripCas+"/"+self.parameCentroPuesto.turno+"/"+self.parameCentroPuesto.frecuencia+"/"+self.paciente.nombres
@@ -751,6 +783,9 @@ class formularioCambioClinica(models.Model):
     nombre_parentesco=models.CharField(max_length=100, blank=True, null=True)
     correo=models.CharField(max_length=100, blank=True, null=True)
     tratamiento_datos=models.BooleanField()
+    estado=models.BooleanField(blank=True, null=True)
+    fecha_resolucion=models.CharField(max_length=100, blank=True, null=True)
+    usuario_resolucion=models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         db_table = 'Formulario_Cambio_Clinicas'

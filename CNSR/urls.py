@@ -88,6 +88,8 @@ router.register(r'incidenciaEnfermeriaCabecera', viewsAsis.incidenciaEnfermeriaC
 router.register(r'procedimientoEnfermeria', viewsAsis.procedimientoEnfermeriaViewSet)
 router.register(r'incidenciaEnfermeriaDetalle', viewsAsis.incidenciaEnfermeriaDetalleViewSet)
 router.register(r'formularioCambioClinica', viewsAsis.formularioCambioClinicaViewSet)
+router.register(r'hospital', viewsAsis.hospitalViewSet)
+router.register(r'medico', viewsAsis.medicoViewSet)
 
 urlpatterns = [
     path('seguro/', viewsAsis.SeguroViewSet, name = 'seguro'),
@@ -109,10 +111,18 @@ urlpatterns = [
     path('generar_confirmacion_liberacion_cupo/', viewsAsis.generar_confirmacion_liberacion_cupo, name='generar_confirmacion_liberacion_cupo'),
     path('generar_reporte_inasistencia/', viewsAsis.generar_reporte_inasistencia, name='generar_reporte_inasistencia'),
     path('generar_turno_actual/', viewsAsis.generar_turno_actual, name='generar_turno_actual'),
-    path('generar_actualizar_turno/', viewsAsis.generar_actualizar_turno, name='generar_actualizar_turno'),
+    path('generar_movimiento_paciente/', viewsAsis.generar_movimiento_paciente, name='generar_movimiento_paciente'),
     path('generar_lista_pacientes/', viewsAsis.generar_lista_pacientes, name='generar_lista_pacientes'),
     path('generar_liberacion_cupo/', viewsAsis.generar_liberacion_cupo, name='generar_liberacion_cupo'),
-    path('generar_lista_pacientes_nuevos/', viewsAsis.generar_lista_pacientes_nuevos, name='generar_lista_pacientes_nuevos')
-    
+    path('generar_liberacion_cupo_documento/', viewsAsis.generar_liberacion_cupo_documento, name='generar_liberacion_cupo_documento'),
+    path('generar_lista_pacientes_nuevos/', viewsAsis.generar_lista_pacientes_nuevos, name='generar_lista_pacientes_nuevos'),
+    path('carga_masiva_lista_espera/', viewsAsis.carga_masiva_lista_espera, name='carga_masiva_lista_espera'),
+    path('generar_asignacion_cupo/', viewsAsis.generar_asignacion_cupo, name='generar_asignacion_cupo'),
+    path('generar_buscar_cupo/', viewsAsis.generar_buscar_cupo, name='generar_buscar_cupo'),
+    path('generar_resolucion_formulario/', viewsAsis.generar_resolucion_formulario, name='generar_resolucion_formulario'),
+    path('generar_lista_hospital/', viewsAsis.generar_lista_hospital, name='generar_lista_hospital'),
+    path('generar_lista_medico/', viewsAsis.generar_lista_medico, name='generar_lista_medico'),
+    path('generar_lista_cupos/', viewsAsis.generar_lista_cupos, name='generar_lista_cupos'),
+    path('generar_actualizar_cupo/', viewsAsis.generar_actualizar_cupo, name='generar_actualizar_cupo')
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
