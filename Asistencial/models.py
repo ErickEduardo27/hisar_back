@@ -130,6 +130,7 @@ class paciente(models.Model):
     ubigeo_id  = models.ForeignKey(ubigeo, on_delete=models.PROTECT,db_column='ubigeo_id')
     def __str__(self):
         return self.nombres
+        
 
     @property
     def nombre_completo(self):
@@ -792,3 +793,20 @@ class formularioCambioClinica(models.Model):
 
     def __str__(self):
         return str(self.num_doc)
+
+class formularioCapacitacion(models.Model):
+    id_capacitacion = models.AutoField(primary_key=True)
+    paciente_id = models.ForeignKey(paciente, on_delete=models.PROTECT, db_column='paciente_id')  # Asumiendo que Paciente es tu modelo de paciente
+    telefono_paciente = models.CharField(max_length=100, null=True, blank=True)
+    documento_cuidador = models.CharField(max_length=100, null=True, blank=True)
+    nombre_cuidador = models.CharField(max_length=100, null=True, blank=True)
+    correo_cuidador = models.CharField(max_length=100, null=True, blank=True)
+    telefono_cuidador = models.CharField(max_length=100, null=True, blank=True)
+    certificado = models.BooleanField()
+    fecha_registro = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'Formulario_capacitacion'
+
+    def __str__(self):
+        return str(self.certificado)

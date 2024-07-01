@@ -90,6 +90,7 @@ router.register(r'incidenciaEnfermeriaDetalle', viewsAsis.incidenciaEnfermeriaDe
 router.register(r'formularioCambioClinica', viewsAsis.formularioCambioClinicaViewSet)
 router.register(r'hospital', viewsAsis.hospitalViewSet)
 router.register(r'medico', viewsAsis.medicoViewSet)
+router.register(r'formularioCapacitacion', viewsAsis.formularioCapacitacionViewSet)
 
 urlpatterns = [
     path('seguro/', viewsAsis.SeguroViewSet, name = 'seguro'),
@@ -123,6 +124,13 @@ urlpatterns = [
     path('generar_lista_hospital/', viewsAsis.generar_lista_hospital, name='generar_lista_hospital'),
     path('generar_lista_medico/', viewsAsis.generar_lista_medico, name='generar_lista_medico'),
     path('generar_lista_cupos/', viewsAsis.generar_lista_cupos, name='generar_lista_cupos'),
-    path('generar_actualizar_cupo/', viewsAsis.generar_actualizar_cupo, name='generar_actualizar_cupo')
+    path('generar_actualizar_cupo/', viewsAsis.generar_actualizar_cupo, name='generar_actualizar_cupo'),
+    path('generar_lista_zona/', viewsAsis.generar_lista_zona, name='generar_lista_zona'),
+    path('generar_lista_ipress/', viewsAsis.generar_lista_ipress, name='generar_lista_ipress'),
+    path('generar_lista_distrito/', viewsAsis.generar_lista_distrito, name='generar_lista_distrito'),
+    path('generar_lista_geolocalizacion/', viewsAsis.generar_lista_geolocalizacion, name='generar_lista_geolocalizacion'),
+    path('generar_lista_paciente/', viewsAsis.generar_lista_paciente, name='generar_lista_paciente'),
+    path('generar_calculo_numero_cuidadores/', viewsAsis.generar_calculo_numero_cuidadores, name='generar_calculo_numero_cuidadores')
+    
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica,hospital,medico
+from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica,hospital,medico,formularioCapacitacion
 from rest_framework import serializers
 
 from datetime import datetime
@@ -363,6 +363,11 @@ class formularioCambioClinicaSerializer (serializers.HyperlinkedModelSerializer)
 
     class Meta:
         model = formularioCambioClinica
+        fields = '__all__'
+
+class formularioCapacitacionSerializer (serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = formularioCapacitacion
         fields = '__all__'
 
 class hospitalSerializer (serializers.HyperlinkedModelSerializer):

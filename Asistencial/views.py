@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from Asistencial.models import incidenciaEnfermeriaDetalle,procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,listaEspera,parNuticion,maestroMatSap,delegacionBienesEstra, cas, usuario,perfil, paciente, examen, archivo, bienAmbiente, bienImag, presAnemia,admiAnemia, exclusionAnemia, movimientoAnemia, bienPersonal, bienpat, dependencia, ambiente, personal, proveedor, provMaq, incidenciaDsi, maestro, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub,formularioCambioClinica,hospital,medico
-from Asistencial.serializers import incidenciaEnfermeriaDetalleSerializer,procedimientoEnfermeriaSerializer,incidenciaEnfermeriaCabeceraSerializer,programacionTurnoSerializer,unidadAtencionSerializer,correosSerializer,solicitudSerializer,movimientoPacienteSerializer,pacienteLocalizacionSerializer,pacienteGeoTemSerializer,ubigeoSerializer,asisPacDiarioAdicionalSerializer,examenLaboratorioSerializer,dpDiarioSerializer,loginAppHisarSerializer,serologiaPacienteSerializer,baseDatosProduccionSerializer,asisPacDiarioSerializer,asigCuposPacSerializer,parameCentroPuestoSerializer,parameCentroSerializer,docuContratadosSerializer,listaEsperaSerializer,parNuticionSerializer,maestroMatSapSerializer,delegacionBienesEstraSerializer, casSerializer ,usuarioSerializer,perfilSerializer, PacienteSerializer, ExamenSerializer, ArchivoSerializer, presAnemiaSerializer, admiAnemiaSerializer, exclusionAnemiaSerializer, movimientoAnemiaSerializer, bienAmbienteSerializer, bienImagSerializer, bienPersonalSerializer, bienpatSerializer, dependenciaSerializer, ambienteSerializer, personalSerializer, proveedorSerializer, provMaqSerializer, incidenciaDsiSerializer, maestroSerializer, bienHadwareSerializer, bienSoftwareSerializer, bienDetalleMonitorSerializer, nutricionSerializer, personalVpnSerializer, personalCertificadoSerializer, valGlobalSubSerializer,formularioCambioClinicaSerializer,hospitalSerializer,medicoSerializer
+from Asistencial.models import incidenciaEnfermeriaDetalle,procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,listaEspera,parNuticion,maestroMatSap,delegacionBienesEstra, cas, usuario,perfil, paciente, examen, archivo, bienAmbiente, bienImag, presAnemia,admiAnemia, exclusionAnemia, movimientoAnemia, bienPersonal, bienpat, dependencia, ambiente, personal, proveedor, provMaq, incidenciaDsi, maestro, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub,formularioCambioClinica,hospital,medico,formularioCapacitacion
+from Asistencial.serializers import incidenciaEnfermeriaDetalleSerializer,procedimientoEnfermeriaSerializer,incidenciaEnfermeriaCabeceraSerializer,programacionTurnoSerializer,unidadAtencionSerializer,correosSerializer,solicitudSerializer,movimientoPacienteSerializer,pacienteLocalizacionSerializer,pacienteGeoTemSerializer,ubigeoSerializer,asisPacDiarioAdicionalSerializer,examenLaboratorioSerializer,dpDiarioSerializer,loginAppHisarSerializer,serologiaPacienteSerializer,baseDatosProduccionSerializer,asisPacDiarioSerializer,asigCuposPacSerializer,parameCentroPuestoSerializer,parameCentroSerializer,docuContratadosSerializer,listaEsperaSerializer,parNuticionSerializer,maestroMatSapSerializer,delegacionBienesEstraSerializer, casSerializer ,usuarioSerializer,perfilSerializer, PacienteSerializer, ExamenSerializer, ArchivoSerializer, presAnemiaSerializer, admiAnemiaSerializer, exclusionAnemiaSerializer, movimientoAnemiaSerializer, bienAmbienteSerializer, bienImagSerializer, bienPersonalSerializer, bienpatSerializer, dependenciaSerializer, ambienteSerializer, personalSerializer, proveedorSerializer, provMaqSerializer, incidenciaDsiSerializer, maestroSerializer, bienHadwareSerializer, bienSoftwareSerializer, bienDetalleMonitorSerializer, nutricionSerializer, personalVpnSerializer, personalCertificadoSerializer, valGlobalSubSerializer,formularioCambioClinicaSerializer,hospitalSerializer,medicoSerializer,formularioCapacitacionSerializer
 from rest_framework import permissions, viewsets, filters
 
 from rest_framework.pagination import PageNumberPagination
@@ -1018,6 +1018,257 @@ def generar_actualizar_cupo(request):
 
     return JsonResponse({"error": "Solicitud no permitida."}, status=405)
 
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_zona(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+
+
+            # Verificar si los valores son None o no están presentes
+            
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_zona()'
+            cursor.execute(sql, [])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('id_zona','zona'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_ipress(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Verificar si los valores son None o no están presentes
+            tipoCas = objeto_python.get("tipoCas")
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_ipress(%s)'
+            cursor.execute(sql, [tipoCas])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('id_cas','descripCas','distrito','cordeCas','latitud','longitud'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_distrito(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Verificar si los valores son None o no están presentes
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_distrito()'
+            cursor.execute(sql, [])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('ubigeo_reniec','departamento','provincia','distrito','latitud','longitud'), fila)))
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_geolocalizacion(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Verificar si los valores son None o no están presentes
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+
+            ubigeo = objeto_python.get("ubigeo")
+            clinica = objeto_python.get("clinica")
+            documento = objeto_python.get("documento")
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_geolocalizacion(%s,%s,%s)'
+            cursor.execute(sql, [ubigeo,clinica,documento])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('idpaciente','num_doc','ape_pat','ape_mat','nombres','paciente','direccion','referencia','telefono','telefono_alterno','cordepac','latitud','longitud','distritopaciente','turno','frecuencia','idclinica','descripcas','distritoclinica'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_paciente(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Verificar si los valores son None o no están presentes
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_pacientes()'
+            cursor.execute(sql, [])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('paciente','num_doc'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_calculo_numero_cuidadores(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Verificar si los valores son None o no están presentes
+            paciente = objeto_python.get("paciente")
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_calculo_numero_cuidadores(%s)'
+            cursor.execute(sql, [paciente])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('numero'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
 @api_view(['POST'])
 @permission_required([IsAuthenticated])
 def enviar_correo_con_adjunto(request):
@@ -1663,6 +1914,14 @@ class formularioCambioClinicaViewSet(viewsets.ModelViewSet):
         if search_param == "":
             queryset = queryset.filter(estado__isnull=True)
         return queryset
+
+class formularioCapacitacionViewSet(viewsets.ModelViewSet):
+    queryset = formularioCapacitacion.objects.all()
+    serializer_class = formularioCapacitacionSerializer
+    permission_classes = [permissions.IsAuthenticated] 
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['=certificado']
+
 
 class hospitalViewSet(viewsets.ModelViewSet):
     queryset = hospital.objects.all()
