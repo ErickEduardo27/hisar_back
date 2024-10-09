@@ -108,6 +108,7 @@ class medico(models.Model):
         return str(self.nombre)
 
 class paciente(models.Model):
+    id = models.AutoField(primary_key=True)
     tipo_doc = models.ForeignKey(maestro, on_delete=models.CASCADE)
     num_doc = models.CharField(max_length=15, unique=True)
     ape_pat = models.CharField(max_length=40)
@@ -128,13 +129,26 @@ class paciente(models.Model):
     telefonoAlterno = models.CharField(max_length=100, null=True, blank=True)
     referencia=models.CharField(max_length=100, null=True, blank=True)
     ubigeo_id  = models.ForeignKey(ubigeo, on_delete=models.PROTECT,db_column='ubigeo_id')
+    serologia=models.CharField(max_length=100, null=True, blank=True)
+
     def __str__(self):
         return self.nombres
         
-
     @property
     def nombre_completo(self):
         return f"{self.nombres} {self.ape_pat} {self.ape_mat}"
+
+class instaladores(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=200)
+    descripcion = models.CharField(max_length=200)
+    fecha_modificacion = models.DateField(null=True, blank=True)
+    imagen = models.CharField(max_length=100, null=True)
+    url = models.CharField(max_length=100, null=True)
+    class Meta:
+        db_table = 'Administrativa_instaladores'
+    def __str__(self):
+        return self.nombre
 
 class serologiaPaciente(models.Model):
     paciente = models.OneToOneField(paciente, on_delete=models.CASCADE, unique=True)
@@ -610,58 +624,58 @@ class dpDiario(models.Model):
     imagenOriSalida = models.FileField(upload_to='media/imgOriSal', null=True, blank=True)
 
 class examenLaboratorio(models.Model):
-    centro = models.CharField(max_length=4, null=True, blank=True)
-    periodo = models.CharField(max_length=6, null=True, blank=True)    
-    area = models.CharField(max_length=40, null=True, blank=True)  
-    servicio = models.CharField(max_length=20, null=True, blank=True)  
-    actividad = models.CharField(max_length=40, null=True, blank=True)  
-    subactividad = models.CharField(max_length=40, null=True, blank=True)  
-    acto_medico = models.CharField(max_length=10, null=True, blank=True)  
-    fecha_atencion = models.CharField(max_length=10, null=True, blank=True)  
-    fecha_solicitud = models.CharField(max_length=10, null=True, blank=True)  
-    fecha_cita = models.CharField(max_length=10, null=True, blank=True)  
-    fecha_resultado = models.CharField(max_length=10, null=True, blank=True)  
-    num_solicitud = models.CharField(max_length=10, null=True, blank=True)  
-    dni_solicita  = models.CharField(max_length=10, null=True, blank=True)
+    centro = models.CharField(max_length=100, null=True, blank=True)
+    periodo = models.CharField(max_length=100, null=True, blank=True)    
+    area = models.CharField(max_length=100, null=True, blank=True)  
+    servicio = models.CharField(max_length=100, null=True, blank=True)  
+    actividad = models.CharField(max_length=100, null=True, blank=True)  
+    subactividad = models.CharField(max_length=100, null=True, blank=True)  
+    acto_medico = models.CharField(max_length=100, null=True, blank=True)  
+    fecha_atencion = models.CharField(max_length=100, null=True, blank=True)  
+    fecha_solicitud = models.CharField(max_length=100, null=True, blank=True)  
+    fecha_cita = models.CharField(max_length=100, null=True, blank=True)  
+    fecha_resultado = models.CharField(max_length=100, null=True, blank=True)  
+    num_solicitud = models.CharField(max_length=100, null=True, blank=True)  
+    dni_solicita  = models.CharField(max_length=100, null=True, blank=True)
     prof_solicita = models.CharField(max_length=100, null=True, blank=True)
-    tipexamen = models.CharField(max_length=10, null=True, blank=True)
-    arealab = models.CharField(max_length=20, null=True, blank=True)
-    sede = models.CharField(max_length=20, null=True, blank=True)
-    examen = models.CharField(max_length=10, null=True, blank=True)
+    tipexamen = models.CharField(max_length=100, null=True, blank=True)
+    arealab = models.CharField(max_length=100, null=True, blank=True)
+    sede = models.CharField(max_length=100, null=True, blank=True)
+    examen = models.CharField(max_length=100, null=True, blank=True)
     descexamen = models.CharField(max_length=200, null=True, blank=True)
-    dni_profesional = models.CharField(max_length=10, null=True, blank=True)
+    dni_profesional = models.CharField(max_length=100, null=True, blank=True)
     profesional = models.CharField(max_length=100, null=True, blank=True)
-    dni_paciente = models.CharField(max_length=15, null=True, blank=True)
-    h_c = models.CharField(max_length=10, null=True, blank=True)
+    dni_paciente = models.CharField(max_length=100, null=True, blank=True)
+    h_c = models.CharField(max_length=100, null=True, blank=True)
     paciente = models.CharField(max_length=100, null=True, blank=True)
-    telefonos = models.CharField(max_length=50, null=True, blank=True)
-    annos = models.CharField(max_length=3, null=True, blank=True)
-    meses = models.CharField(max_length=2, null=True, blank=True)
-    dias = models.CharField(max_length=2, null=True, blank=True)
-    sexo = models.CharField(max_length=6, null=True, blank=True)
-    tipo_paciente = models.CharField(max_length=20, null=True, blank=True)
-    cas_adscripcion = models.CharField(max_length=6, null=True, blank=True)
-    diagnostico = models.CharField(max_length=10, null=True, blank=True)
+    telefonos = models.CharField(max_length=100, null=True, blank=True)
+    annos = models.CharField(max_length=100, null=True, blank=True)
+    meses = models.CharField(max_length=100, null=True, blank=True)
+    dias = models.CharField(max_length=100, null=True, blank=True)
+    sexo = models.CharField(max_length=100, null=True, blank=True)
+    tipo_paciente = models.CharField(max_length=100, null=True, blank=True)
+    cas_adscripcion = models.CharField(max_length=100, null=True, blank=True)
+    diagnostico = models.CharField(max_length=100, null=True, blank=True)
     des_diagn = models.CharField(max_length=100, null=True, blank=True)
-    tip_diagn = models.CharField(max_length=10, null=True, blank=True)
-    resultado = models.CharField(max_length=20, null=True, blank=True)
-    categoria_resul = models.CharField(max_length=50, null=True, blank=True)
-    fecha_registro = models.CharField(max_length=10, null=True, blank=True)  
-    usuario_registro = models.CharField(max_length=20, null=True, blank=True)
+    tip_diagn = models.CharField(max_length=100, null=True, blank=True)
+    resultado = models.CharField(max_length=100, null=True, blank=True)
+    categoria_resul = models.CharField(max_length=100, null=True, blank=True)
+    fecha_registro = models.CharField(max_length=100, null=True, blank=True)  
+    usuario_registro = models.CharField(max_length=100, null=True, blank=True)
     informe_resultado = models.CharField(max_length=200, null=True, blank=True)
-    orden_plantilla = models.CharField(max_length=6, null=True, blank=True)
-    desc_plantilla = models.CharField(max_length=40, null=True, blank=True)
-    valor_resultado = models.CharField(max_length=20, null=True, blank=True)
-    unidadvalor = models.CharField(max_length=40, null=True, blank=True)
-    observresultado = models.CharField(max_length=40, null=True, blank=True)
-    usario_modifica = models.CharField(max_length=20, null=True, blank=True)
-    fecha_modifica = models.CharField(max_length=10, null=True, blank=True)  
+    orden_plantilla = models.CharField(max_length=100, null=True, blank=True)
+    desc_plantilla = models.CharField(max_length=100, null=True, blank=True)
+    valor_resultado = models.CharField(max_length=100, null=True, blank=True)
+    unidadvalor = models.CharField(max_length=100, null=True, blank=True)
+    observresultado = models.CharField(max_length=100, null=True, blank=True)
+    usario_modifica = models.CharField(max_length=100, null=True, blank=True)
+    fecha_modifica = models.CharField(max_length=100, null=True, blank=True)  
     centro_origen_solicitud = models.CharField(max_length=4, null=True, blank=True)
-    codresul_covid = models.CharField(max_length=6, null=True, blank=True)
+    codresul_covid = models.CharField(max_length=100, null=True, blank=True)
     resultado_covid = models.CharField(max_length=40, null=True, blank=True)
-    hora_registro = models.CharField(max_length=20, null=True, blank=True)
-    autogenerado = models.CharField(max_length=20, null=True, blank=True)
-    desc_topico = models.CharField(max_length=40, null=True, blank=True)
+    hora_registro = models.CharField(max_length=100, null=True, blank=True)
+    autogenerado = models.CharField(max_length=100, null=True, blank=True)
+    desc_topico = models.CharField(max_length=100, null=True, blank=True)
 
 
 # PACIENTES GEOLOCALIZACION
@@ -773,7 +787,7 @@ class incidenciaEnfermeriaDetalle(models.Model):
 class formularioCambioClinica(models.Model):
     fecha = models.CharField(max_length=100)
     paciente_id = models.ForeignKey(paciente, on_delete=models.PROTECT, db_column='paciente_id')  # Asumiendo que Paciente es tu modelo de paciente
-    motivo = models.CharField(max_length=100)
+    motivo = models.CharField(max_length=200)
     id_cas_1 = models.ForeignKey(cas, on_delete=models.PROTECT, db_column='id_cas_1',related_name='id_cas_1')
     id_cas_2 = models.ForeignKey(cas, on_delete=models.PROTECT, db_column='id_cas_2',related_name='id_cas_2', blank=True, null=True)
     es_titular = models.BooleanField()
@@ -810,3 +824,93 @@ class formularioCapacitacion(models.Model):
 
     def __str__(self):
         return str(self.certificado)
+
+class laboratorio(models.Model):
+    subactividad = models.CharField(max_length=50, null=True)
+    fecha_toma_muestra = models.CharField(max_length=50, null=True)
+    fecha_solicitud = models.CharField(max_length=50, null=True)
+    fecha_resultado = models.CharField(max_length=30, null=True)
+    num_solicitud = models.CharField(max_length=30, null=True)
+    dni_paciente = models.CharField(max_length=30, null=True)
+    desc_plantilla = models.CharField(max_length=40, null=True)
+    unidad = models.CharField(max_length=40, null=True)
+    valor = models.CharField(max_length=40, null=True)
+    valor_otros = models.CharField(max_length=255, null=True)
+    desc_examen = models.CharField(max_length=350, null=True)
+    informe_resultado = models.CharField(max_length=300, null=True)
+    autogenerado=models.CharField(max_length=300, null=True)
+    valor_texto=models.CharField(max_length=300, null=True)
+
+    class Meta:
+        db_table = 'Asistencial_laboratorio'
+    def __str__(self):
+        return self.subactividad
+
+class laboratorioTemp(models.Model):
+    subactividad = models.CharField(max_length=50, null=True)
+    fecha_atencion = models.CharField(max_length=50, null=True)
+    fecha_solicitud = models.CharField(max_length=50, null=True)
+    fecha_resultado = models.CharField(max_length=30, null=True)
+    num_solicitud = models.CharField(max_length=30, null=True)
+    dni_paciente = models.CharField(max_length=30, null=True)
+    desc_plantilla = models.CharField(max_length=40, null=True)
+    unidadvalor = models.CharField(max_length=40, null=True)
+    valor_resultado = models.CharField(max_length=40, null=True)
+    otrosvalores = models.CharField(max_length=255, null=True)
+    descexamen = models.CharField(max_length=350, null=True)
+    informe_resultado = models.CharField(max_length=300, null=True)
+    autogenerado=models.CharField(max_length=300, null=True)
+
+    class Meta:
+        db_table = 'Temp_laboratorio'
+    def __str__(self):
+        return self.subactividad
+
+class protocoloAnemia(models.Model):
+    num_doc = models.CharField(max_length=50, null=True)
+    fecha_resultado = models.CharField(max_length=50, null=True)
+    hemoglobina = models.CharField(max_length=100, null=True)
+    dosis_epo = models.CharField(max_length=50, null=True)
+    via = models.CharField(max_length=30, null=True)
+    dosis_hierro = models.CharField(max_length=30, null=True)
+    observaciones = models.CharField(max_length=100, null=True)
+    class Meta:
+        db_table = 'Asistencial_protocolo_anemia'
+    def __str__(self):
+        return self.num_doc
+
+class protocoloTmo(models.Model):
+    num_doc = models.CharField(max_length=50, null=True)
+    fecha_resultado = models.CharField(max_length=50, null=True)
+    calcio = models.CharField(max_length=100, null=True)
+    fosforo = models.CharField(max_length=50, null=True)
+    paratohormona = models.CharField(max_length=30, null=True)
+    carbonato_calcio = models.CharField(max_length=30, null=True)
+    sevelamero = models.CharField(max_length=100, null=True)
+    calcitriol_ev = models.CharField(max_length=100, null=True)
+    calcitriol_vo = models.CharField(max_length=100, null=True)
+    paricalcitol = models.CharField(max_length=100, null=True)
+    cinacalcet = models.CharField(max_length=100, null=True)
+    calcio_endializado = models.CharField(max_length=100, null=True)
+    observaciones = models.CharField(max_length=100, null=True)
+    class Meta:
+        db_table = 'Asistencial_protocolo_tmo'
+    def __str__(self):
+        return self.num_doc
+
+class protocoloNutricion(models.Model):
+    num_doc = models.CharField(max_length=50, null=True)
+    fecha_resultado = models.CharField(max_length=50, null=True)
+    albumina = models.CharField(max_length=100, null=True)
+    masa_corporal = models.CharField(max_length=50, null=True)
+    masa_muscular = models.CharField(max_length=30, null=True)
+    ingesta_prot_cal = models.CharField(max_length=30, null=True)
+    bioquimica = models.CharField(max_length=100, null=True)
+    total_criterios = models.CharField(max_length=100, null=True)
+    diagnostico = models.CharField(max_length=100, null=True)
+    sno = models.CharField(max_length=100, null=True)
+    administracion = models.CharField(max_length=100, null=True)
+    class Meta:
+        db_table = 'Asistencial_protocolo_nutricion'
+    def __str__(self):
+        return self.num_doc

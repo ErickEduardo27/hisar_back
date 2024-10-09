@@ -91,6 +91,12 @@ router.register(r'formularioCambioClinica', viewsAsis.formularioCambioClinicaVie
 router.register(r'hospital', viewsAsis.hospitalViewSet)
 router.register(r'medico', viewsAsis.medicoViewSet)
 router.register(r'formularioCapacitacion', viewsAsis.formularioCapacitacionViewSet)
+router.register(r'laboratorio', viewsAsis.laboratorioViewSet)
+router.register(r'instaladores', viewsAsis.instaladoresViewSet)
+router.register(r'protocoloAnemia', viewsAsis.protocoloAnemiaViewSet, basename='protocoloanemia')
+router.register(r'protocoloTmo', viewsAsis.protocoloTmoViewSet, basename='protocoloTmo')
+router.register(r'protocoloNutricion', viewsAsis.protocoloNutricionViewSet, basename='protocolonutricion')
+
 
 urlpatterns = [
     path('seguro/', viewsAsis.SeguroViewSet, name = 'seguro'),
@@ -130,7 +136,45 @@ urlpatterns = [
     path('generar_lista_distrito/', viewsAsis.generar_lista_distrito, name='generar_lista_distrito'),
     path('generar_lista_geolocalizacion/', viewsAsis.generar_lista_geolocalizacion, name='generar_lista_geolocalizacion'),
     path('generar_lista_paciente/', viewsAsis.generar_lista_paciente, name='generar_lista_paciente'),
-    path('generar_calculo_numero_cuidadores/', viewsAsis.generar_calculo_numero_cuidadores, name='generar_calculo_numero_cuidadores')
+    path('generar_calculo_numero_cuidadores/', viewsAsis.generar_calculo_numero_cuidadores, name='generar_calculo_numero_cuidadores'),
+    path('generar_buscar_chatbot/', viewsAsis.generar_buscar_chatbot, name='generar_buscar_chatbot'),
+    path('generar_busqueda_pacientes/', viewsAsis.generar_busqueda_pacientes, name='generar_busqueda_pacientes'),
+    path('generar_lista_geolocalizacion_mapa/', viewsAsis.generar_lista_geolocalizacion_mapa, name='generar_lista_geolocalizacion_mapa'),
+    path('reporte_asistencia_grafico/', viewsAsis.reporte_asistencia_grafico, name='reporte_asistencia_grafico'),
+    path('carga_masiva_laboratorio/', viewsAsis.carga_masiva_laboratorio, name='carga_masiva_laboratorio'),
+    path('generar_reporte_laboratorio/', viewsAsis.generar_reporte_laboratorio, name='generar_reporte_laboratorio'),
+    path('generar_reporte_cupos_por_tipo_detalles/', viewsAsis.generar_reporte_cupos_por_tipo_detalles, name='generar_reporte_cupos_por_tipo_detalles'),
+    path('actualizar_tipo_paciente/', viewsAsis.actualizar_tipo_paciente, name='actualizar_tipo_paciente'),
+    path('generar_reporte_nuevos_reingresos/', viewsAsis.generar_reporte_nuevos_reingresos, name='generar_reporte_nuevos_reingresos'),
+    path('generar_reporte_resumen_produccion/', viewsAsis.generar_reporte_resumen_produccion, name='generar_reporte_resumen_produccion'),
+    path('generar_lista_capacidad_cupos/', viewsAsis.generar_lista_capacidad_cupos, name='generar_lista_capacidad_cupos'),
+    path('generar_actualizacion_capacidad_cupos/', viewsAsis.generar_actualizacion_capacidad_cupos, name='generar_actualizacion_capacidad_cupos'),
+    path('generar_validacion_cupo/', viewsAsis.generar_validacion_cupo, name='generar_validacion_cupo'),
+    path('generar_reporte_asginacion_cupos/', viewsAsis.generar_reporte_asginacion_cupos, name='generar_reporte_asginacion_cupos'),
+    path('generar_reporte_protocolo/', viewsAsis.generar_reporte_protocolo, name='generar_reporte_protocolo'),
+    path('generar_reporte_laboratorio_protocolo_hemoglobina/', viewsAsis.generar_reporte_laboratorio_protocolo_hemoglobina, name='generar_reporte_laboratorio_protocolo_hemoglobina'),
+    path('generar_reporte_laboratorio_protocolo_dosis_epo/', viewsAsis.generar_reporte_laboratorio_protocolo_dosis_epo, name='generar_reporte_laboratorio_protocolo_dosis_epo'),
+    path('generar_lista_protocolo_anemia/', viewsAsis.generar_lista_protocolo_anemia, name='generar_lista_protocolo_anemia'),
+    path('generar_actualizar_protocolo_anemia/', viewsAsis.generar_actualizar_protocolo_anemia, name='generar_actualizar_protocolo_anemia'),
+    path('carga_masiva_laboratorio_temp/', viewsAsis.carga_masiva_laboratorio_temp, name='carga_masiva_laboratorio_temp'),
+    path('generar_lista_pacientes_laboratorio/', viewsAsis.generar_lista_pacientes_laboratorio, name='generar_lista_pacientes_laboratorio'),
+    path('generar_actualizar_sala_laboratorio/', viewsAsis.generar_actualizar_sala_laboratorio, name='generar_actualizar_sala_laboratorio'),
+    path('generar_actualizar_protocolo_tmo/', viewsAsis.generar_actualizar_protocolo_tmo, name='generar_actualizar_protocolo_tmo'),
+    path('generar_actualizar_protocolo_nutricion/', viewsAsis.generar_actualizar_protocolo_nutricion, name='generar_actualizar_protocolo_nutricion'),
+    path('generar_actualizar_protocolo_hta/', viewsAsis.generar_actualizar_protocolo_hta, name='generar_actualizar_protocolo_hta'),
+    path('generar_reporte_laboratorio_historico/', viewsAsis.generar_reporte_laboratorio_historico, name='generar_reporte_laboratorio_historico'),
+    path('generar_lista_protocolo_tmo/', viewsAsis.generar_lista_protocolo_tmo, name='generar_lista_protocolo_tmo'),
+    path('generar_lista_protocolo_nutricion/', viewsAsis.generar_lista_protocolo_nutricion, name='generar_lista_protocolo_nutricion'),
+    path('generar_lista_protocolo_hta/', viewsAsis.generar_lista_protocolo_hta, name='generar_lista_protocolo_hta'),
+    path('generar_consulta_resultado_anemia/', viewsAsis.generar_consulta_resultado_anemia, name='generar_consulta_resultado_anemia'),
+    path('generar_consulta_resultado_hta/', viewsAsis.generar_consulta_resultado_hta, name='generar_consulta_resultado_hta'),
+    path('generar_consulta_resultado_nutricion/', viewsAsis.generar_consulta_resultado_nutricion, name='generar_consulta_resultado_nutricion'),
+    path('generar_consulta_resultado_tmo/', viewsAsis.generar_consulta_resultado_tmo, name='generar_consulta_resultado_tmo'),
+    path('generar_reporte_laboratorio_protocolo_calcio/', viewsAsis.generar_reporte_laboratorio_protocolo_calcio, name='generar_reporte_laboratorio_protocolo_calcio'),
+    path('generar_reporte_laboratorio_protocolo_fosforo/', viewsAsis.generar_reporte_laboratorio_protocolo_fosforo, name='generar_reporte_laboratorio_protocolo_fosforo'),
+    path('generar_reporte_laboratorio_protocolo_paratohormona/', viewsAsis.generar_reporte_laboratorio_protocolo_paratohormona, name='generar_reporte_laboratorio_protocolo_paratohormona')
+    
+
     
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

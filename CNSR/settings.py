@@ -68,7 +68,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://10.0.54.105:90',
     'http://apps.essalud.gob.pe',
     'https://apps.essalud.gob.pe',
-    'http://10.0.54.68:90'
+    'http://10.0.54.68:90',
+    'http://10.0.54.68:100'
 )
 
 

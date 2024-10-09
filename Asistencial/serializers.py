@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica,hospital,medico,formularioCapacitacion
+from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica,hospital,medico,formularioCapacitacion,laboratorio,instaladores,protocoloAnemia,protocoloTmo,protocoloNutricion,laboratorioTemp
 from rest_framework import serializers
 
 from datetime import datetime
@@ -16,6 +16,11 @@ class pacienteGeoTemSerializer(serializers.HyperlinkedModelSerializer):
 class ubigeoSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ubigeo
+        fields = '__all__' 
+
+class instaladoresSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = instaladores
         fields = '__all__' 
 
 class casSerializer(serializers.HyperlinkedModelSerializer):
@@ -47,9 +52,20 @@ class maestroSerializer(serializers.HyperlinkedModelSerializer):
         model = maestro
         fields = '__all__' 
 
+class hospitalSerializer (serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = hospital
+        fields = '__all__'
+
+class medicoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = medico
+        fields = '__all__' 
+        
 class PacienteSerializer(serializers.HyperlinkedModelSerializer):
     datosMaestro = maestroSerializer(source = "tipo_doc", read_only=True)
-    datosCasOri = casSerializer(source = "cas", read_only=True)
+    datosHospital = hospitalSerializer(source = "hospital_id", read_only=True)
+    datosMedico = medicoSerializer(source = "medico_id", read_only=True)
     edad = serializers.SerializerMethodField('obtain_edad') 
     nombre_completo = serializers.SerializerMethodField()
     datosUbigeo = ubigeoSerializer(source = "ubigeo_id", read_only=True)
@@ -252,7 +268,7 @@ class parameCentroPuestoSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 class asigCuposPacSerializer(serializers.HyperlinkedModelSerializer):
-    datosPueto = parameCentroPuestoSerializer(source = "parameCentroPuesto", read_only=True)
+    datosPuesto = parameCentroPuestoSerializer(source = "parameCentroPuesto", read_only=True)
     datosPaciente = PacienteSerializer(source="paciente", read_only=True)
     class Meta:
         model = asigCuposPac
@@ -370,12 +386,29 @@ class formularioCapacitacionSerializer (serializers.HyperlinkedModelSerializer):
         model = formularioCapacitacion
         fields = '__all__'
 
-class hospitalSerializer (serializers.HyperlinkedModelSerializer):
+
+class laboratorioSerializer (serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = hospital
+        model = laboratorio
         fields = '__all__'
 
-class medicoSerializer(serializers.HyperlinkedModelSerializer):
+class laboratorioTempSerializer (serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = medico
-        fields = '__all__' 
+        model = laboratorioTemp
+        fields = '__all__'
+
+class protocoloAnemiaSerializer (serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = protocoloAnemia
+        fields = '__all__'
+
+
+class protocoloTmoSerializer (serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = protocoloTmo
+        fields = '__all__'
+
+class protocoloNutricionSerializer (serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = protocoloNutricion
+        fields = '__all__'
