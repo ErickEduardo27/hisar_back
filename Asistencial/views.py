@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from Asistencial.models import incidenciaEnfermeriaDetalle,procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,listaEspera,parNuticion,maestroMatSap,delegacionBienesEstra, cas, usuario,perfil, paciente, examen, archivo, bienAmbiente, bienImag, presAnemia,admiAnemia, exclusionAnemia, movimientoAnemia, bienPersonal, bienpat, dependencia, ambiente, personal, proveedor, provMaq, incidenciaDsi, maestro, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub,formularioCambioClinica,hospital,medico,formularioCapacitacion,laboratorio,instaladores,protocoloAnemia,protocoloTmo,protocoloNutricion,laboratorioTemp
+from Asistencial.models import incidenciaEnfermeriaDetalle,procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,listaEspera,parNuticion,maestroMatSap,delegacionBienesEstra, cas, usuario,perfil, paciente, examen, archivo, bienAmbiente, bienImag, presAnemia,admiAnemia, exclusionAnemia, movimientoAnemia, bienPersonal, bienpat, dependencia, ambiente, personal, proveedor, provMaq, incidenciaDsi, maestro, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub,formularioCambioClinica,hospital,medico,formularioCapacitacion,laboratorio,instaladores,protocoloAnemia,protocoloTmo,protocoloNutricion,laboratorioTemp,formularioCenso
 from Asistencial.serializers import incidenciaEnfermeriaDetalleSerializer,procedimientoEnfermeriaSerializer,incidenciaEnfermeriaCabeceraSerializer,programacionTurnoSerializer,unidadAtencionSerializer,correosSerializer,solicitudSerializer,movimientoPacienteSerializer,pacienteLocalizacionSerializer,pacienteGeoTemSerializer,ubigeoSerializer,asisPacDiarioAdicionalSerializer,examenLaboratorioSerializer,dpDiarioSerializer,loginAppHisarSerializer,serologiaPacienteSerializer,baseDatosProduccionSerializer,asisPacDiarioSerializer,asigCuposPacSerializer,parameCentroPuestoSerializer,parameCentroSerializer,docuContratadosSerializer,listaEsperaSerializer,parNuticionSerializer,maestroMatSapSerializer,delegacionBienesEstraSerializer, casSerializer ,usuarioSerializer,perfilSerializer, PacienteSerializer, ExamenSerializer, ArchivoSerializer, presAnemiaSerializer, admiAnemiaSerializer, exclusionAnemiaSerializer, movimientoAnemiaSerializer, bienAmbienteSerializer, bienImagSerializer, bienPersonalSerializer, bienpatSerializer, dependenciaSerializer, ambienteSerializer, personalSerializer, proveedorSerializer, provMaqSerializer, incidenciaDsiSerializer, maestroSerializer, bienHadwareSerializer, bienSoftwareSerializer, bienDetalleMonitorSerializer, nutricionSerializer, personalVpnSerializer, personalCertificadoSerializer, valGlobalSubSerializer,formularioCambioClinicaSerializer,hospitalSerializer,medicoSerializer,formularioCapacitacionSerializer,laboratorioSerializer,instaladoresSerializer,protocoloAnemiaSerializer,protocoloTmoSerializer,protocoloNutricionSerializer,laboratorioTempSerializer
 from rest_framework import permissions, viewsets, filters
 from django.db import transaction
@@ -26,6 +26,8 @@ import openpyxl
 import json
 import os
 import socket
+import time
+from decimal import Decimal
 
 @api_view(['POST'])
 @permission_required([IsAuthenticated])
@@ -1579,7 +1581,7 @@ def generar_busqueda_pacientes(request):
             datos = []
 
             for fila in resultados:
-                datos.append(dict(zip(('nombre_paciente','distrito','telefono','clinica','id_paciente'), fila)))
+                datos.append(dict(zip(('id_paciente','nombre_paciente','ape_pat','ape_mat','latitud','longitud','direccion','telefono','telefonoAlterno','ubigeo_id','departamento','provincia','distrito','clinica','turno','frecuencia','tipoPuesto'), fila)))
 
             # Convertir la lista de diccionarios a formato JSON
             json_data = json.dumps(datos)
@@ -1756,7 +1758,7 @@ def generar_reporte_laboratorio(request):
             for fila in resultados:
                 datos.append(dict(zip(('FECHA_RESULTADO', 'NUM_DOC', 'AUTOGENERADO', 'PACIENTE', 'SALA', 'ALBUMINA', 'CALCIO_TOTAL', 'CALCIO_POST', 'CALCIO_PRE', 'CALCIO_IONIZADO', 'CLORURO', 'COLESTEROL', 'CREATININA', 
                 'CREATININA_POST', 'CREATININA_PRE', 'FERRITINA', 'GLUCOSA', 'FIERRO', 'COLESTEROL_HDL', 'COLESTEROL_LDL', 'PARATOHORMONA', 'FOSFATASA_ALCALINA', 'FOSFORO','FOSFORO_POST', 'FOSFORO_PRE', 'POTASIO', 'SODIO', 'TRANSAMINASA_GLUTAMICO_PIRUVIC', 'TRANSAMINASA_GLUTAMICO_OXALACE', 'TRANSFERRINA', 'TRIGLICERIDOS', 'UREA','ACIDO_URICO', 'GLOBULOS_BLANCOS', 'GLOBULOS_ROJOS', 'HEMATOCRITO', 'HEMOGLOBINA', 'PROTEINA_C_REACTIVA', 'ANTIGENO_HEPATIT', 'ANTICUERPO_HEPATITIS_CORE', 
-                'ANTICUERPO_HEPATITIS_C','UREA_PRE','UREA_POST'
+                'ANTICUERPO_HEPATITIS_C','UREA_PRE','UREA_POST','HCO3'
                 ), fila)))
             # Convertir la lista de diccionarios a formato JSON
             json_data = json.dumps(datos)
@@ -2356,7 +2358,6 @@ def generar_reporte_asginacion_cupos(request):
             return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
 
     return JsonResponse({"error": "Solicitud no permitida."}, status=405)
-
 
 @api_view(['POST'])
 @permission_required([IsAuthenticated])
@@ -3151,6 +3152,325 @@ def generar_consulta_resultado_tmo(request):
     return JsonResponse({"error": "Solicitud no permitida."}, status=405)
 
 
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_actualizar_censo_paciente(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            id_paciente = objeto_python.get("paciente_id")
+            telefono = objeto_python.get("telefono")
+            telefonoAlterno = objeto_python.get("telefonoAlterno")
+            latitud = objeto_python.get("latitud")
+            longitud = objeto_python.get("longitud")
+            direccion = objeto_python.get("direccion")
+            ubigeo_id = objeto_python.get("ubigeo_id")
+
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_actualizar_censo_paciente(%s,%s,%s,%s,%s,%s,%s)'
+            cursor.execute(sql, [id_paciente,telefono,telefonoAlterno,latitud,longitud,direccion,ubigeo_id])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('PACIENTE'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_ingresar_censo_paciente(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+            ip = request.META.get('REMOTE_ADDR')
+            #print(ip)
+            # Importar las clases necesarias
+            cursor = connection.cursor()
+            id_paciente = objeto_python.get("paciente_id")
+            telefonoAlterno = objeto_python.get("telefonoAlterno")
+            latitud = objeto_python.get("latitud")
+            longitud = objeto_python.get("longitud")
+            direccion = objeto_python.get("direccion")
+            id_ubigeo = objeto_python.get("ubigeo_id")
+            dni = objeto_python.get("num_doc")
+            nombres = objeto_python.get("nombres")
+            ape_pat = objeto_python.get("ape_pat")
+            ape_mat = objeto_python.get("ape_mat")
+            telefono = objeto_python.get("telefono")
+            id_clinica = objeto_python.get("clinica")
+            serologia = objeto_python.get("serologia")
+            frecuencia = objeto_python.get("secuencia")
+            turno = objeto_python.get("turno")
+            host = ip
+            usuario = objeto_python.get("usuario")
+            tiempoTratamiento = objeto_python.get("tiempoTratamiento")
+            distanciaCentro = objeto_python.get("distanciaCentro")
+            tiempoLlegada = objeto_python.get("tiempoLlegada")
+            gastoTransporte = objeto_python.get("gastoTransporte")
+            atencionCercana = objeto_python.get("atencionCercana")
+            tipoAccesoVascular = objeto_python.get("tipoAccesoVascular")
+            medicacion = objeto_python.get("medicacion")
+            terapia = objeto_python.get("terapia")
+            satisfaccion = objeto_python.get("satisfaccion")
+            medioTransporte = objeto_python.get("medioTransporte")
+            medicoTurno = objeto_python.get("medicoTurno")
+            numeroMedico = objeto_python.get("numeroMedico")
+            motivoFalta = objeto_python.get("motivoFalta")
+
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_ingresar_censo_paciente(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+            cursor.execute(sql, [id_paciente,dni,nombres,ape_pat,ape_mat,telefono,telefonoAlterno,latitud,longitud,direccion,id_ubigeo,id_clinica,serologia,frecuencia,turno,host,usuario,tiempoTratamiento,distanciaCentro,tiempoLlegada,gastoTransporte,atencionCercana,tipoAccesoVascular,medicacion,terapia,satisfaccion,medioTransporte,medicoTurno,numeroMedico,motivoFalta])
+            
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('PACIENTE'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def generar_lista_usuario_censo(request):
+    if request.method == 'POST':
+        try:
+            # Decodificar el cuerpo de la solicitud y cargarlo como objeto Python
+            body = request.body.decode('utf-8')
+            objeto_python = json.loads(body)
+            
+            cursor = connection.cursor()
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_lista_usuario_censo()'
+            cursor.execute(sql, [])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('id_usuario','usuario'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            
+            # Devolver la respuesta JSON
+            return JsonResponse(cadena_sin_escape, safe=False)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Error al decodificar el cuerpo de la solicitud JSON."}, status=400)
+        except KeyError as e:
+            return JsonResponse({"error": f"Clave faltante en el cuerpo de la solicitud: {e}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": f"Error interno del servidor: {e}"}, status=500)
+
+    return JsonResponse({"error": "Solicitud no permitida."}, status=405)
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def long_poll_updates(request):
+    body = request.body.decode('utf-8')
+    objeto_python = json.loads(body)
+    fecha = objeto_python.get("fecha")
+
+    # Importar las clases necesarias
+    cursor = connection.cursor()
+    # Almacena la cantidad de registros totales la primera vez que se llama
+    last_record_count = formularioCenso.objects.count()
+    # Variable para simular una "actualización" en este ejemplo
+    last_update_time = time.time()
+
+    # Máximo tiempo en segundos para esperar antes de responder
+    TIMEOUT = 45  # Puedes ajustar el tiempo de espera
+
+    # Intervalo de tiempo para verificar actualizaciones
+    CHECK_INTERVAL = 1  # Cada segundo
+
+    # Tiempo de inicio de la espera
+    start_time = time.time()
+
+    while time.time() - start_time < TIMEOUT:
+        # Verificar si hay una actualización disponible
+        if data_updated_since(last_record_count):  # Reemplaza con tu lógica de actualización
+            last_update_time = time.time()
+            return get_new_data(fecha)  # get_new_data() obtiene los datos actualizados
+        
+        # Esperar antes de la siguiente verificación
+        time.sleep(CHECK_INTERVAL)
+
+    # Si no hubo cambios en el tiempo límite, responde sin cambios
+    return JsonResponse({'hasUpdates': False})
+
+def data_updated_since(last_record_count):
+    current_count = formularioCenso.objects.count()
+    
+    if current_count != last_record_count:
+        last_record_count = current_count  # Actualiza el conteo para futuras verificaciones
+        return True  # Indica que ha habido una actualización
+    return False  # No ha habido cambios
+
+def get_new_data(fecha):
+
+    registros_mapa = generar_reporte_censo_mapa(fecha)
+    registros_tabla = reporte_censo_acumulado(fecha)
+    registro_acumulado=generar_reporte_censo_resumen(fecha)
+    return JsonResponse({'hasUpdates': True, 'registros_mapa': registros_mapa,'registros_tabla':registros_tabla,'registro_acumulado':registro_acumulado})
+
+@api_view(['POST'])
+@permission_required([IsAuthenticated])
+def dashboardEncuesta(request):
+    # Función para obtener los datos actualizados que serán enviados al frontend
+    body = request.body.decode('utf-8')
+    objeto_python = json.loads(body)
+    fecha = objeto_python.get("fecha")
+    # Aquí va tu lógica para obtener los datos
+    registros_mapa = generar_reporte_censo_mapa(fecha)
+    
+    registros_tabla = reporte_censo_acumulado(fecha)
+    registro_acumulado=generar_reporte_censo_resumen(fecha)
+
+    return JsonResponse({'hasUpdates': True, 'registros_mapa': registros_mapa,'registros_tabla':registros_tabla,'registro_acumulado':registro_acumulado})
+
+def generar_reporte_censo_resumen(fecha):
+    # Función para obtener los datos actualizados que serán enviados al frontend
+    try:
+            
+            cursor = connection.cursor()
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_reporte_censo_resumen(%s)'
+            cursor.execute(sql, [fecha])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            columnas = [col[0] for col in cursor.description]
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            """ for fila in resultados:
+                datos.append(dict(zip(('cantidad','nro_registros','avance','fecha_registro'), fila))) """
+            for fila in resultados:
+                fila_dict = {}
+                for key, value in zip(columnas, fila):
+                    # Convertir Decimal a str para evitar problemas de serialización
+                    if isinstance(value, Decimal):
+                        fila_dict[key] = str(value)
+                    else:
+                        fila_dict[key] = value
+                datos.append(fila_dict)
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return cadena_sin_escape
+        
+    except json.JSONDecodeError:
+            return []
+
+def reporte_censo_acumulado(fecha):
+    # Función para obtener los datos actualizados que serán enviados al frontend
+    try:
+            
+            cursor = connection.cursor()
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_reporte_censo(%s)'
+            cursor.execute(sql, [fecha])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('descripCas','usuario','frecuencia','turno','cantidad','numero_registro','cas_id','fecha_registro'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            
+            # Devolver la respuesta JSON
+            return cadena_sin_escape
+        
+    except json.JSONDecodeError:
+            return []
+
+def generar_reporte_censo_mapa(fecha):
+    # Función para obtener los datos actualizados que serán enviados al frontend
+    try:
+            
+            cursor = connection.cursor()
+            # Definir la consulta SQL y ejecutarla
+            sql = 'select * from generar_reporte_censo_mapa(%s)'
+            cursor.execute(sql, [fecha])
+
+            # Obtener todos los resultados
+            resultados = cursor.fetchall()
+            
+            # Convertir los resultados a formato JSON
+            datos = []
+
+            for fila in resultados:
+                datos.append(dict(zip(('latitud','longitud','usuario','dni','nombres'), fila)))
+
+            # Convertir la lista de diccionarios a formato JSON
+            json_data = json.dumps(datos)
+            cadena_sin_escape = json.loads(json_data)
+            # Devolver la respuesta JSON
+            return cadena_sin_escape
+        
+    except json.JSONDecodeError:
+            return []
 
 @api_view(['POST'])
 @permission_required([IsAuthenticated])

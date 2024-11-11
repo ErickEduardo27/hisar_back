@@ -914,3 +914,39 @@ class protocoloNutricion(models.Model):
         db_table = 'Asistencial_protocolo_nutricion'
     def __str__(self):
         return self.num_doc
+        
+class formularioCenso(models.Model):
+    id_censo = models.AutoField(primary_key=True) 
+    id_paciente = models.CharField(max_length=50, null=True)
+    dni = models.CharField(max_length=50, null=True)
+    nombres = models.CharField(max_length=100, null=True)
+    ape_pat = models.CharField(max_length=50, null=True)
+    ape_mat = models.CharField(max_length=30, null=True)
+    telefono = models.CharField(max_length=30, null=True)
+    telefono_alterno = models.CharField(max_length=100, null=True)
+    latitud = models.CharField(max_length=100, null=True)
+    longitud = models.CharField(max_length=100, null=True)
+    direccion = models.CharField(max_length=100, null=True)
+    id_ubigeo = models.CharField(max_length=100, null=True)
+    id_clinica = models.CharField(max_length=100, null=True)
+    serologia = models.CharField(max_length=100, null=True)
+    frecuencia = models.CharField(max_length=100, null=True)
+    turno = models.CharField(max_length=100, null=True)
+    fecha_registro = models.CharField(max_length=100, null=True)
+    host = models.CharField(max_length=100, null=True)
+    usuario = models.CharField(max_length=100, null=True)
+    pregunta_1 = models.CharField(max_length=100, null=True)
+    pregunta_2 = models.CharField(max_length=100, null=True)
+    pregunta_3 = models.CharField(max_length=100, null=True)
+    pregunta_4 = models.CharField(max_length=100, null=True)
+    pregunta_5 = models.CharField(max_length=100, null=True)
+    pregunta_6 = models.CharField(max_length=100, null=True)
+    pregunta_7 = models.CharField(max_length=100, null=True)
+    pregunta_8 = models.CharField(max_length=100, null=True)
+    pregunta_9 = models.CharField(max_length=100, null=True)
+    pregunta_10 = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        db_table = 'Formulario_censo'
+    def __str__(self):
+        return self.dni

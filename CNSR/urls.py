@@ -172,7 +172,12 @@ urlpatterns = [
     path('generar_consulta_resultado_tmo/', viewsAsis.generar_consulta_resultado_tmo, name='generar_consulta_resultado_tmo'),
     path('generar_reporte_laboratorio_protocolo_calcio/', viewsAsis.generar_reporte_laboratorio_protocolo_calcio, name='generar_reporte_laboratorio_protocolo_calcio'),
     path('generar_reporte_laboratorio_protocolo_fosforo/', viewsAsis.generar_reporte_laboratorio_protocolo_fosforo, name='generar_reporte_laboratorio_protocolo_fosforo'),
-    path('generar_reporte_laboratorio_protocolo_paratohormona/', viewsAsis.generar_reporte_laboratorio_protocolo_paratohormona, name='generar_reporte_laboratorio_protocolo_paratohormona')
+    path('generar_reporte_laboratorio_protocolo_paratohormona/', viewsAsis.generar_reporte_laboratorio_protocolo_paratohormona, name='generar_reporte_laboratorio_protocolo_paratohormona'),
+    path('generar_actualizar_censo_paciente/', viewsAsis.generar_actualizar_censo_paciente, name='generar_actualizar_censo_paciente'),
+    path('generar_ingresar_censo_paciente/', viewsAsis.generar_ingresar_censo_paciente, name='generar_ingresar_censo_paciente'),
+    path('generar_lista_usuario_censo/', viewsAsis.generar_lista_usuario_censo, name='generar_lista_usuario_censo'),
+    path('long_poll_updates/', viewsAsis.long_poll_updates, name='long_poll_updates'),
+    path('dashboardEncuesta/', viewsAsis.dashboardEncuesta, name='dashboardEncuesta')
     
 
     
