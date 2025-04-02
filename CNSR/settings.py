@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.gis',
     'Asistencial.apps.AsistencialConfig',
+    'Administrativo.apps.AdministrativoConfig',
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',

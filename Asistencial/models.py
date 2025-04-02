@@ -56,6 +56,7 @@ class usuario(models.Model):
     usuario = models.CharField(max_length=15, unique=True)
     clave = models.CharField(max_length=20)
     perfil_id = models.CharField(max_length=50)
+    estadoGeo = models.BooleanField(blank=True, null=True)
     
     def __str__(self):
         return (self.usuario)
@@ -826,25 +827,25 @@ class formularioCapacitacion(models.Model):
         return str(self.certificado)
 
 class laboratorio(models.Model):
-    subactividad = models.CharField(max_length=50, null=True)
-    fecha_toma_muestra = models.CharField(max_length=50, null=True)
-    fecha_solicitud = models.CharField(max_length=50, null=True)
-    fecha_resultado = models.CharField(max_length=30, null=True)
-    num_solicitud = models.CharField(max_length=30, null=True)
-    dni_paciente = models.CharField(max_length=30, null=True)
-    desc_plantilla = models.CharField(max_length=40, null=True)
-    unidad = models.CharField(max_length=40, null=True)
-    valor = models.CharField(max_length=40, null=True)
-    valor_otros = models.CharField(max_length=255, null=True)
-    desc_examen = models.CharField(max_length=350, null=True)
-    informe_resultado = models.CharField(max_length=300, null=True)
-    autogenerado=models.CharField(max_length=300, null=True)
-    valor_texto=models.CharField(max_length=300, null=True)
+    num_doc=models.CharField(max_length=300, primary_key=True, null=False)
+    periodo=models.CharField(max_length=300, null=True)
+    ktv=models.CharField(max_length=300, null=True)
 
     class Meta:
         db_table = 'Asistencial_laboratorio'
     def __str__(self):
-        return self.subactividad
+        return self.num_doc
+
+class laboratorioKtv(models.Model):
+    num_doc=models.CharField(max_length=300, null=False)
+    periodo=models.CharField(max_length=300, null=True)
+    ktv=models.CharField(max_length=300, null=True)
+    tru=models.CharField(max_length=300, null=True)
+
+    class Meta:
+        db_table = 'Asistencial_lab_ktv'
+    def __str__(self):
+        return self.num_doc
 
 class laboratorioTemp(models.Model):
     subactividad = models.CharField(max_length=50, null=True)
@@ -950,3 +951,17 @@ class formularioCenso(models.Model):
         db_table = 'Formulario_censo'
     def __str__(self):
         return self.dni
+
+class registroCarga(models.Model):
+    nombre_archivo = models.CharField(max_length=255, verbose_name='Nombre del Archivo')
+    tamano_archivo = models.IntegerField(verbose_name='Tamaño del Archivo (bytes)')
+    tipo_archivo = models.CharField(max_length=50, verbose_name='Tipo de Archivo')
+    fecha_carga = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de Carga')
+    estado = models.CharField(max_length=50, default='Pendiente', verbose_name='Estado de la Carga')
+    detalles = models.TextField(blank=True, null=True, verbose_name='Detalles de la Carga')
+    usuario = models.CharField(max_length=255, verbose_name='Nombre del usuario')
+
+    class Meta:
+        db_table = 'reg_lab_ktv'
+    def __str__(self):
+        return self.nombre_archivo

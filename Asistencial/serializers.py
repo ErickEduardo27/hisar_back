@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica,hospital,medico,formularioCapacitacion,laboratorio,instaladores,protocoloAnemia,protocoloTmo,protocoloNutricion,laboratorioTemp
+from Asistencial.models import procedimientoEnfermeria,incidenciaEnfermeriaCabecera,programacionTurno,unidadAtencion,correos,solicitud,movimientoPaciente,pacienteLocalizacion,pacienteGeoTem,ubigeo,asisPacDiarioAdicional,examenLaboratorio,dpDiario,loginAppHisar,serologiaPaciente,baseDatosProduccion,asisPacDiario,asigCuposPac,parameCentroPuesto,parameCentro,docuContratados,maestroMatSap,parNuticion,delegacionBienesEstra, cas ,usuario,perfil, paciente, examen, archivo, personalCertificado, presAnemia, admiAnemia, exclusionAnemia, movimientoAnemia, bienAmbiente, bienPersonal, bienpat, dependencia, ambiente, personal, bienImag, proveedor, provMaq, maestro, incidenciaDsi, bienHadware, bienSoftware, bienDetalleMonitor, nutricion, personalVpn, personalCertificado, valGlobalSub, listaEspera,formularioCambioClinica,hospital,medico,formularioCapacitacion,laboratorio,instaladores,protocoloAnemia,protocoloTmo,protocoloNutricion,laboratorioTemp,registroCarga
 from rest_framework import serializers
 
 from datetime import datetime
@@ -412,3 +412,8 @@ class protocoloNutricionSerializer (serializers.HyperlinkedModelSerializer):
     class Meta:
         model = protocoloNutricion
         fields = '__all__'
+
+class registroCargaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = registroCarga
+        fields = '__all__' 

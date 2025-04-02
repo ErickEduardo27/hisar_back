@@ -1,0 +1,1 @@
+from .auditorio import AuditorioAreaSerializer,AuditorioComponenteSerializer,AuditorioRolSerializer,AuditorioPersonalSerializer,AuditorioRolComponentesSerializer

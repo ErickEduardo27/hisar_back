@@ -1,0 +1,1 @@
+from .auditorio import AuditorioArea,AuditorioComponente,AuditorioRol,AuditorioPersonal,AuditorioRolComponentes

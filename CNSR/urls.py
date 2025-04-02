@@ -22,6 +22,7 @@ from django.urls import re_path as url
 
 from rest_framework import routers, permissions
 from Asistencial import views as viewsAsis
+from Administrativo.views.auditorio import AuditorioAreaViewSet,AuditorioComponenteViewSet, AuditorioRolViewSet, AuditorioPersonalViewSet, AuditorioRolComponentesViewSet
 
 from rest_framework_simplejwt import views as jwt_views
 
@@ -96,7 +97,14 @@ router.register(r'instaladores', viewsAsis.instaladoresViewSet)
 router.register(r'protocoloAnemia', viewsAsis.protocoloAnemiaViewSet, basename='protocoloanemia')
 router.register(r'protocoloTmo', viewsAsis.protocoloTmoViewSet, basename='protocoloTmo')
 router.register(r'protocoloNutricion', viewsAsis.protocoloNutricionViewSet, basename='protocolonutricion')
+router.register(r'registroCarga', viewsAsis.registroCargaViewSet, basename='registrocarga')
 
+#AUDITORIO
+router.register(r'auditorio-areas', AuditorioAreaViewSet)
+router.register(r'auditorio_componentes', AuditorioComponenteViewSet)
+router.register(r'auditorio_roles', AuditorioRolViewSet)
+router.register(r'auditorio_personal', AuditorioPersonalViewSet)
+router.register(r'auditorio_rol_componentes', AuditorioRolComponentesViewSet)
 
 urlpatterns = [
     path('seguro/', viewsAsis.SeguroViewSet, name = 'seguro'),
@@ -177,8 +185,19 @@ urlpatterns = [
     path('generar_ingresar_censo_paciente/', viewsAsis.generar_ingresar_censo_paciente, name='generar_ingresar_censo_paciente'),
     path('generar_lista_usuario_censo/', viewsAsis.generar_lista_usuario_censo, name='generar_lista_usuario_censo'),
     path('long_poll_updates/', viewsAsis.long_poll_updates, name='long_poll_updates'),
-    path('dashboardEncuesta/', viewsAsis.dashboardEncuesta, name='dashboardEncuesta')
-    
+    path('dashboardEncuesta/', viewsAsis.dashboardEncuesta, name='dashboardEncuesta'),
+    path('carga_ktv_archivo/', viewsAsis.carga_ktv_archivo, name='carga_ktv_archivo'),
+    path('generar_reporte_laboratorio_protocolo_tgp/', viewsAsis.generar_reporte_laboratorio_protocolo_tgp, name='generar_reporte_laboratorio_protocolo_tgp'),
+    path('generar_reporte_laboratorio_protocolo_ktv/', viewsAsis.generar_reporte_laboratorio_protocolo_ktv, name='generar_reporte_laboratorio_protocolo_ktv'),
+    path('generar_lista_geolocalizacion_jaen/', viewsAsis.generar_lista_geolocalizacion_jaen, name='generar_lista_geolocalizacion_jaen'),
+    path('generar_lista_geolocalizacion_mapa_jaen/', viewsAsis.generar_lista_geolocalizacion_mapa_jaen, name='generar_lista_geolocalizacion_mapa_jaen'),
+    path('generar_crear_paciente_cupo/', viewsAsis.generar_crear_paciente_cupo, name='generar_crear_paciente_cupo'),
+    path('generar_crear_evento/', viewsAsis.generar_crear_evento, name='generar_crear_evento'),
+    path('generar_lista_eventos/', viewsAsis.generar_lista_eventos, name='generar_lista_eventos'),
+    path('generar_actualizar_evento/', viewsAsis.generar_actualizar_evento, name='generar_actualizar_evento'),
+    path('generar_eliminar_evento/', viewsAsis.generar_eliminar_evento, name='generar_eliminar_evento'),
+    path('generar_lista_correo_auditorio/', viewsAsis.generar_lista_correo_auditorio, name='generar_lista_correo_auditorio'),
+    path('generar_lista_area_auditorio/', viewsAsis.generar_lista_area_auditorio, name='generar_lista_area_auditorio')
 
     
     
