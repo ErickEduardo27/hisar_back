@@ -24,6 +24,9 @@ from rest_framework import routers, permissions
 from Asistencial import views as viewsAsis
 from Administrativo.views.auditorio import AuditorioAreaViewSet,AuditorioComponenteViewSet, AuditorioRolViewSet, AuditorioPersonalViewSet, AuditorioRolComponentesViewSet
 
+from Administrativo.views.rrhh_planilla import RrhhPlanillaAreaViewSet,RrhhPlanillaComponenteViewSet, RrhhPlanillaRolViewSet, RrhhPlanillaUsuarioViewSet, RrhhPlanillaRolComponentesViewSet, AdministrativoRRHHPersonalViewSet,AdministrativoRRHHHorarioViewSet,AdministrativoRRHHPeriodoViewSet
+from Administrativo.views.seguridad import SeguridadAreaViewSet,SeguridadComponenteViewSet, SeguridadRolViewSet, SeguridadUsuarioViewSet, SeguridadRolComponentesViewSet
+
 from rest_framework_simplejwt import views as jwt_views
 
 from drf_yasg.views import get_schema_view
@@ -105,6 +108,25 @@ router.register(r'auditorio_componentes', AuditorioComponenteViewSet)
 router.register(r'auditorio_roles', AuditorioRolViewSet)
 router.register(r'auditorio_personal', AuditorioPersonalViewSet)
 router.register(r'auditorio_rol_componentes', AuditorioRolComponentesViewSet)
+
+#RRHH_PLANILLA
+router.register(r'rrhh_planilla-areas', RrhhPlanillaAreaViewSet)
+router.register(r'rrhh_planilla_componentes', RrhhPlanillaComponenteViewSet)
+router.register(r'rrhh_planilla_roles', RrhhPlanillaRolViewSet)
+router.register(r'rrhh_planilla_usuario', RrhhPlanillaUsuarioViewSet)
+router.register(r'rrhh_planilla_rol_componentes', RrhhPlanillaRolComponentesViewSet)
+router.register(r'rrhh_planilla_personal', AdministrativoRRHHPersonalViewSet)
+router.register(r'rrhh_planilla_horarios', AdministrativoRRHHHorarioViewSet)
+router.register(r'rrhh_planilla_periodos', AdministrativoRRHHPeriodoViewSet)
+
+
+#ADMINISTRATIVO_SEGURIDAD
+router.register(r'seguridad_area', SeguridadAreaViewSet)
+router.register(r'seguridad_componentes', SeguridadComponenteViewSet)
+router.register(r'seguridad_roles', SeguridadRolViewSet)
+router.register(r'seguridad_usuario', SeguridadUsuarioViewSet)
+router.register(r'seguridad_rol_componentes', SeguridadRolComponentesViewSet)
+
 
 urlpatterns = [
     path('seguro/', viewsAsis.SeguroViewSet, name = 'seguro'),
