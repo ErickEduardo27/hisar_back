@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from Administrativo.models.rrhh_planilla import RrhhPlanillaArea, RrhhPlanillaComponente, RrhhPlanillaRol,RrhhPlanillaUsuario,RrhhPlanillaRolComponentes,AdministrativoRRHHPersonal,AdministrativoRRHHHorario,AdministrativoRRHHPeriodo
-from Administrativo.serializers.rrhh_planilla import RrhhPlanillaAreaSerializer, RrhhPlanillaComponenteSerializer, RrhhPlanillaRolSerializer,RrhhPlanillaUsuarioSerializer,RrhhPlanillaRolComponentesSerializer,AdministrativoRRHHPersonalSerializer,AdministrativoRRHHHorarioSerializer,RrhhPlanillaPeriodoSerializer
-from rest_framework import permissions, viewsets, filters
+from Administrativo.models.rrhh_planilla import RrhhPlanillaArea, RrhhPlanillaComponente, RrhhPlanillaRol,RrhhPlanillaUsuario,RrhhPlanillaRolComponentes,AdministrativoRRHHPersonal,AdministrativoRRHHHorario,AdministrativoRRHHPeriodo,AdministrativoRRHHDias,AdministrativoRRHHDiasHorario
+from Administrativo.serializers.rrhh_planilla import RrhhPlanillaAreaSerializer, RrhhPlanillaComponenteSerializer, RrhhPlanillaRolSerializer,RrhhPlanillaUsuarioSerializer,RrhhPlanillaRolComponentesSerializer,AdministrativoRRHHPersonalSerializer,AdministrativoRRHHHorarioSerializer,RrhhPlanillaPeriodoSerializer,AdministrativoRRHHDiasSerializer,AdministrativoRRHHDiasHorarioSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import permissions, viewsets, filters
 
 
 class RrhhPlanillaAreaViewSet(viewsets.ModelViewSet):
@@ -59,3 +59,38 @@ class AdministrativoRRHHHorarioViewSet(viewsets.ModelViewSet):
 class AdministrativoRRHHPeriodoViewSet(viewsets.ModelViewSet):
     queryset = AdministrativoRRHHPeriodo.objects.all().order_by('id')
     serializer_class = RrhhPlanillaPeriodoSerializer
+
+class AdministrativoRRHHDiasViewSet(viewsets.ModelViewSet):
+    queryset = AdministrativoRRHHDias.objects.all().order_by('id')
+    serializer_class = AdministrativoRRHHDiasSerializer
+
+    @action(detail=False, methods=['get'], url_path='periodo')
+    def buscar_por_periodo(self, request):
+        periodo = request.query_params.get('periodo', None)
+        if periodo:
+            dias = AdministrativoRRHHDias.objects.filter(periodo__periodo=periodo).order_by('numero_dia')
+            if dias.exists():
+                serializer = self.get_serializer(dias, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({"error": "No se encontraron días para el periodo"}, status=404)
+        else:
+            return Response({"error": "Parámetro 'periodo' es requerido"}, status=400)
+
+class AdministrativoRRHHDiasHorarioViewSet(viewsets.ModelViewSet):
+    queryset = AdministrativoRRHHDiasHorario.objects.all().order_by('id')
+    serializer_class = AdministrativoRRHHDiasHorarioSerializer
+
+    @action(detail=False, methods=['get'], url_path='periodo_personal')
+    def buscar_por_periodo(self, request):
+        periodo = request.query_params.get('periodo', None)
+        personal = request.query_params.get('personal', None)
+        if periodo and personal:
+            dias = AdministrativoRRHHDiasHorario.objects.filter(dias__periodo__periodo=periodo,personal_id=personal).order_by('dias__numero_dia')
+            if dias.exists():
+                serializer = self.get_serializer(dias, many=True)
+                return Response(serializer.data)
+            else:
+                return Response({"error": "No se encontraron días para el periodo"}, status=404)
+        else:
+            return Response({"error": "Parámetro 'periodo' es requerido"}, status=400)

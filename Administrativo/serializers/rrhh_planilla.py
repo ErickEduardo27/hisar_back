@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Administrativo.models.rrhh_planilla import RrhhPlanillaUsuario,RrhhPlanillaRol,RrhhPlanillaArea,RrhhPlanillaComponente, RrhhPlanillaRolComponentes,AdministrativoRRHHPersonal,AdministrativoRRHHHorario,AdministrativoRRHHPeriodo
+from Administrativo.models.rrhh_planilla import RrhhPlanillaUsuario,RrhhPlanillaRol,RrhhPlanillaArea,RrhhPlanillaComponente, RrhhPlanillaRolComponentes,AdministrativoRRHHPersonal,AdministrativoRRHHHorario,AdministrativoRRHHPeriodo,AdministrativoRRHHDias,AdministrativoRRHHDiasHorario
 
 class RrhhPlanillaAreaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,3 +66,31 @@ class RrhhPlanillaPeriodoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdministrativoRRHHPeriodo
         fields = '__all__'
+
+class AdministrativoRRHHDiasSerializer(serializers.ModelSerializer):
+    periodo = serializers.CharField(source='periodo.periodo', read_only=True)
+    periodo_id = serializers.PrimaryKeyRelatedField(queryset=AdministrativoRRHHPeriodo.objects.all(), source="periodo")
+    class Meta:
+        model = AdministrativoRRHHDias
+        fields = '__all__'
+        
+""" class AdministrativoRRHHDiasHorarioSerializer(serializers.ModelSerializer):
+    personal = serializers.CharField(source='personal.nombre_periodo', read_only=True)
+    personal_id = serializers.PrimaryKeyRelatedField(queryset=AdministrativoRRHHPersonal.objects.all(), source="personal")
+    dias = serializers.CharField(source='dias.numero_dia', read_only=True)
+    dias_id = serializers.PrimaryKeyRelatedField(queryset=AdministrativoRRHHDias.objects.all(), source="dias")
+    class Meta:
+        model = AdministrativoRRHHDiasHorario
+        fields = '__all__' """
+
+class AdministrativoRRHHDiasHorarioSerializer(serializers.ModelSerializer):
+    personal = serializers.CharField(source='personal.nombre_periodo', read_only=True)
+    personal_id = serializers.PrimaryKeyRelatedField(queryset=AdministrativoRRHHPersonal.objects.all(), source="personal")
+
+    dias = AdministrativoRRHHDiasSerializer(read_only=True)
+    dias_id = serializers.PrimaryKeyRelatedField(queryset=AdministrativoRRHHDias.objects.all(), source="dias")
+
+    class Meta:
+        model = AdministrativoRRHHDiasHorario
+        fields = '__all__'
+

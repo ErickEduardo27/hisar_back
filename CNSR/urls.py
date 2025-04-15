@@ -24,7 +24,7 @@ from rest_framework import routers, permissions
 from Asistencial import views as viewsAsis
 from Administrativo.views.auditorio import AuditorioAreaViewSet,AuditorioComponenteViewSet, AuditorioRolViewSet, AuditorioPersonalViewSet, AuditorioRolComponentesViewSet
 
-from Administrativo.views.rrhh_planilla import RrhhPlanillaAreaViewSet,RrhhPlanillaComponenteViewSet, RrhhPlanillaRolViewSet, RrhhPlanillaUsuarioViewSet, RrhhPlanillaRolComponentesViewSet, AdministrativoRRHHPersonalViewSet,AdministrativoRRHHHorarioViewSet,AdministrativoRRHHPeriodoViewSet
+from Administrativo.views.rrhh_planilla import RrhhPlanillaAreaViewSet,RrhhPlanillaComponenteViewSet, RrhhPlanillaRolViewSet, RrhhPlanillaUsuarioViewSet, RrhhPlanillaRolComponentesViewSet, AdministrativoRRHHPersonalViewSet,AdministrativoRRHHHorarioViewSet,AdministrativoRRHHPeriodoViewSet,AdministrativoRRHHDiasViewSet,AdministrativoRRHHDiasHorarioViewSet
 from Administrativo.views.seguridad import SeguridadAreaViewSet,SeguridadComponenteViewSet, SeguridadRolViewSet, SeguridadUsuarioViewSet, SeguridadRolComponentesViewSet
 
 from rest_framework_simplejwt import views as jwt_views
@@ -118,7 +118,8 @@ router.register(r'rrhh_planilla_rol_componentes', RrhhPlanillaRolComponentesView
 router.register(r'rrhh_planilla_personal', AdministrativoRRHHPersonalViewSet)
 router.register(r'rrhh_planilla_horarios', AdministrativoRRHHHorarioViewSet)
 router.register(r'rrhh_planilla_periodos', AdministrativoRRHHPeriodoViewSet)
-
+router.register(r'rrhh_planilla_dias', AdministrativoRRHHDiasViewSet)
+router.register(r'rrhh_planilla_dias_horario', AdministrativoRRHHDiasHorarioViewSet)
 
 #ADMINISTRATIVO_SEGURIDAD
 router.register(r'seguridad_area', SeguridadAreaViewSet)

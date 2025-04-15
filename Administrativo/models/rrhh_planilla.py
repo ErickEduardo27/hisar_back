@@ -170,10 +170,43 @@ class AdministrativoRRHHHorario(models.Model):
         return self.horario
 
 class AdministrativoRRHHPeriodo(models.Model):
-    periodo = models.CharField(max_length=100)
+    periodo = models.CharField(max_length=100,unique=True)
+    mes = models.CharField(max_length=50)
+    year = models.CharField(max_length=50)
 
     class Meta:
         db_table = "Administrativo_rrhhPeriodo"
 
     def __str__(self):
         return self.periodo
+
+class AdministrativoRRHHDias(models.Model):
+    periodo = models.ForeignKey(AdministrativoRRHHPeriodo, on_delete=models.PROTECT, related_name="dias_del_periodo")
+    nombre_dia = models.CharField(max_length=15)
+    numero_dia = models.IntegerField()
+    es_feriado = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "Administrativo_rrhhPlanillaDias"
+
+    def __str__(self):
+        return f"{self.numero_dia} - {self.nombre_dia}"
+
+class AdministrativoRRHHDiasHorario(models.Model):
+    dias = models.ForeignKey(AdministrativoRRHHDias, on_delete=models.PROTECT, related_name="dias_de_periodo")
+    personal = models.ForeignKey(AdministrativoRRHHPersonal, on_delete=models.PROTECT, related_name="personal_dias")
+    horas_guardia = models.CharField(max_length=15, null=True, blank=True)
+    horas_horario = models.CharField(max_length=15, null=True, blank=True)
+    rango_horario = models.CharField(max_length=15, null=True, blank=True)
+    rango_guardia = models.CharField(max_length=15, null=True, blank=True)
+    tipo = models.CharField(max_length=15, null=True, blank=True)
+    he_25 = models.CharField(max_length=15, null=True, blank=True)
+    he_35 = models.CharField(max_length=15, null=True, blank=True)
+    es_jefe = models.BooleanField(default=False, null=True, blank=True)
+    
+
+    class Meta:
+        db_table = "Administrativo_rrhhPlanillaDiasHorario"
+
+    def __str__(self):
+        return f"{self.horas_guardia} - {self.horas_horario}"
