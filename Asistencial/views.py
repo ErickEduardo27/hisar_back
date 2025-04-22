@@ -4,6 +4,7 @@ from Asistencial.models import incidenciaEnfermeriaDetalle,procedimientoEnfermer
 from Asistencial.serializers import incidenciaEnfermeriaDetalleSerializer,procedimientoEnfermeriaSerializer,incidenciaEnfermeriaCabeceraSerializer,programacionTurnoSerializer,unidadAtencionSerializer,correosSerializer,solicitudSerializer,movimientoPacienteSerializer,pacienteLocalizacionSerializer,pacienteGeoTemSerializer,ubigeoSerializer,asisPacDiarioAdicionalSerializer,examenLaboratorioSerializer,dpDiarioSerializer,loginAppHisarSerializer,serologiaPacienteSerializer,baseDatosProduccionSerializer,asisPacDiarioSerializer,asigCuposPacSerializer,parameCentroPuestoSerializer,parameCentroSerializer,docuContratadosSerializer,listaEsperaSerializer,parNuticionSerializer,maestroMatSapSerializer,delegacionBienesEstraSerializer, casSerializer ,usuarioSerializer,perfilSerializer, PacienteSerializer, ExamenSerializer, ArchivoSerializer, presAnemiaSerializer, admiAnemiaSerializer, exclusionAnemiaSerializer, movimientoAnemiaSerializer, bienAmbienteSerializer, bienImagSerializer, bienPersonalSerializer, bienpatSerializer, dependenciaSerializer, ambienteSerializer, personalSerializer, proveedorSerializer, provMaqSerializer, incidenciaDsiSerializer, maestroSerializer, bienHadwareSerializer, bienSoftwareSerializer, bienDetalleMonitorSerializer, nutricionSerializer, personalVpnSerializer, personalCertificadoSerializer, valGlobalSubSerializer,formularioCambioClinicaSerializer,hospitalSerializer,medicoSerializer,formularioCapacitacionSerializer,laboratorioSerializer,instaladoresSerializer,protocoloAnemiaSerializer,protocoloTmoSerializer,protocoloNutricionSerializer,laboratorioTempSerializer,registroCargaSerializer
 from rest_framework import permissions, viewsets, filters
 from django.db import transaction
+from bs4 import BeautifulSoup
 import re
 from datetime import datetime
 from rest_framework.pagination import PageNumberPagination
@@ -118,6 +119,40 @@ def rep_Asistencia_Pacientes(request):
     json_data = json.dumps(datos)
 
     return HttpResponse(json_data)
+
+@api_view(['POST'])
+def webscrping(request):
+    # Iniciar una sesión para mantener cookies
+    session = requests.Session()
+
+    # URL del login
+    login_url = "http://sgss.essalud/sgss/servlet/hmainmenu"
+
+    # Preparar el payload de login
+    payload = {
+        "W0005_USECOD": "44430347",
+        "W0005_CLAVE": "Zhaetoo1234",
+        "W0005BTNLOGIN": "Login",
+    }
+
+    # Realizar el POST al login
+    response = session.post(login_url, data=payload)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    print(soup)
+
+    # Verificar si el login fue exitoso
+    if "Centro Asistencial" in response.text.lower() or "paciente" in response.text.lower():
+        print("✅ Login exitoso")
+        
+        # Ahora puedes navegar a otra URL interna
+        datos_url = "http://sgss.essalud/sgss/servlet/pagina_interna"
+        datos_response = session.get(datos_url)
+        print(datos_response.text)
+
+    else:
+        print("❌ Login fallido o no autorizado")
+        print(response.text)
+    return {"error": response }
 
 @api_view(['POST'])
 @permission_required([IsAuthenticated])

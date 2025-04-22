@@ -220,7 +220,8 @@ urlpatterns = [
     path('generar_actualizar_evento/', viewsAsis.generar_actualizar_evento, name='generar_actualizar_evento'),
     path('generar_eliminar_evento/', viewsAsis.generar_eliminar_evento, name='generar_eliminar_evento'),
     path('generar_lista_correo_auditorio/', viewsAsis.generar_lista_correo_auditorio, name='generar_lista_correo_auditorio'),
-    path('generar_lista_area_auditorio/', viewsAsis.generar_lista_area_auditorio, name='generar_lista_area_auditorio')
+    path('generar_lista_area_auditorio/', viewsAsis.generar_lista_area_auditorio, name='generar_lista_area_auditorio'),
+    path('webscrping/', viewsAsis.webscrping, name='webscrping')
 
     
     
