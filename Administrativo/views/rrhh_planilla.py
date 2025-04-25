@@ -48,9 +48,38 @@ class RrhhPlanillaRolComponentesViewSet(viewsets.ModelViewSet):
     queryset = RrhhPlanillaRolComponentes.objects.all()
     serializer_class = RrhhPlanillaRolComponentesSerializer
 
-class AdministrativoRRHHPersonalViewSet(viewsets.ModelViewSet):
+""" class AdministrativoRRHHPersonalViewSet(viewsets.ModelViewSet):
     queryset = AdministrativoRRHHPersonal.objects.all().order_by('id')
+    serializer_class = AdministrativoRRHHPersonalSerializer """
+    
+class AdministrativoRRHHPersonalViewSet(viewsets.ModelViewSet):
     serializer_class = AdministrativoRRHHPersonalSerializer
+
+    def get_queryset(self):
+        queryset = AdministrativoRRHHPersonal.objects.all().order_by('id')
+
+        estado = self.request.query_params.get('estado')
+        if estado is not None:
+            # convierte el string 'true'/'false' en booleano
+            if estado.lower() == 'true':
+                queryset = queryset.filter(estado=True)
+            elif estado.lower() == 'false':
+                queryset = queryset.filter(estado=False)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        campos = request.query_params.get('campos')
+        queryset = self.get_queryset()
+
+        if campos:
+            campos_lista = campos.split(',')
+            data = queryset.values(*campos_lista)  # Solo devuelve los campos seleccionados
+            return Response(data)
+        else:
+            # Usa el serializer completo si no se especifican campos
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
 
 class AdministrativoRRHHHorarioViewSet(viewsets.ModelViewSet):
     queryset = AdministrativoRRHHHorario.objects.all()
